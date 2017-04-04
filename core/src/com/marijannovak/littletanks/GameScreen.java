@@ -245,14 +245,14 @@ class GameScreen implements Screen {
 
     private void moveBullets() {
 
-        for(Bullet bullet : bulletList)
+        for(int i = 0; i < bulletList.size(); i++)
         {
-            bullet.move(bullet.getRotation());
+            bulletList.get(i).move(bulletList.get(i).getRotation());
 
-            if(bullet.isOutOfScreen(camera))
+            if(bulletList.get(i).isOutOfScreen(camera))
             {
-                bullet.getSprite().getTexture().dispose();
-                bulletList.remove(bullet);
+                bulletList.get(i).getSprite().getTexture().dispose();
+                bulletList.remove(i);
             }
 
         }
