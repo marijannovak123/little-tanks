@@ -19,7 +19,7 @@ import java.util.Random;
  */
 
 class GameScreen implements Screen {
-//TODO iz run! pogledat sta fali,..enemy, screenwrap..soudnovi..backgroud..grafike i buttoni za start, database, animacijacdead tank
+//TODO iz run! pogledat sta fali,..enemy, ..soudnovi...., database, animacijacdead tank
 //TODO enemye na pocetku initspawn, poslije drukcije..kad se ubije tenk opet init spawn
     private final LittleTanks game;
     private final static String TAG = "LOGIRANJE";
@@ -73,7 +73,6 @@ class GameScreen implements Screen {
         controller.setFireSize(camera.viewportHeight/3, camera.viewportHeight/3);
         controller.setJoystickCenter(new Vector2(controller.getJoystickSprite().getWidth()/2, controller.getJoystickSprite().getHeight()/2));
 
-
         controller.setJoystickPos(0,0);
         controller.setFirePos(camera.viewportWidth - controller.getFireSprite().getWidth(), 0);
 
@@ -96,7 +95,7 @@ class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-//todo kretanje enemy muzika multi touch , TEKST LOSE LIFE; SCORE L LIFES
+//todo kretanje enemy muzika multi touch , TEKST LOSE LIFE; SCORE L LIVES, vise tenkova s vremenom?
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -109,7 +108,7 @@ class GameScreen implements Screen {
 
         checkTankEnemyCollision();
 
-        if(!tankCanMove && (gameTime - blockTankTime) > 1)
+        if(!tankCanMove && (gameTime - blockTankTime) > 0.5)
         {
             tankCanMove = true;
         }
@@ -144,9 +143,9 @@ class GameScreen implements Screen {
 
         if(gameTime - lastSpeedUp > 20)
         {
-            for(int i = 0; i < enemyList.size(); i++)
+            for(Enemy enemy : enemyList)
             {
-                enemyList.get(i).speedUp(1);
+                enemy.speedUp(1);
             }
 
             lastSpeedUp = gameTime;
@@ -155,14 +154,14 @@ class GameScreen implements Screen {
 
     private void moveEnemies() {
 
-        for(int i = 0; i < enemyList.size(); i++) //kreci neprijatelje
+        for(Enemy enemy : enemyList) //kreci neprijatelje
         {
-            enemyList.get(i).move(enemyList.get(i).getRotation());
+            enemy.move(enemy.getRotation());
 
-            if(enemyList.get(i).getPosition().x > camera.viewportWidth)enemyList.get(i).getSprite().setPosition(0, enemyList.get(i).getPosition().y);
-            if(enemyList.get(i).getPosition().x < -enemyList.get(i).getSprite().getWidth()) enemyList.get(i).getSprite().setPosition(camera.viewportWidth, enemyList.get(i).getPosition().y);
-            if(enemyList.get(i).getPosition().y > camera.viewportHeight) enemyList.get(i).getSprite().setPosition(enemyList.get(i).getPosition().x, 0);
-            if(enemyList.get(i).getPosition().y < -enemyList.get(i).getSprite().getHeight()) enemyList.get(i).getSprite().setPosition(enemyList.get(i).getPosition().x, camera.viewportHeight);
+            if(enemy.getPosition().x > camera.viewportWidth)enemy.getSprite().setPosition(0, enemy.getPosition().y);
+            if(enemy.getPosition().x < -enemy.getSprite().getWidth()) enemy.getSprite().setPosition(camera.viewportWidth, enemy.getPosition().y);
+            if(enemy.getPosition().y > camera.viewportHeight) enemy.getSprite().setPosition(enemy.getPosition().x, 0);
+            if(enemy.getPosition().y < -enemy.getSprite().getHeight()) enemy.getSprite().setPosition(enemy.getPosition().x, camera.viewportHeight);
         }
     }
 
@@ -172,7 +171,8 @@ class GameScreen implements Screen {
         {
 
             if(enemyList.get(i).isShot(bulletList) >= 0) {
-                Gdx.app.log(TAG, "shot");
+
+                //Gdx.app.log(TAG, "shot");
 
                 int whichShot = enemyList.get(i).isShot(bulletList);
                 enemyList.get(i).getSprite().getTexture().dispose();
@@ -245,14 +245,14 @@ class GameScreen implements Screen {
 
     private void moveBullets() {
 
-        for(int i = 0; i < bulletList.size(); i++)
+        for(Bullet bullet : bulletList)
         {
-            bulletList.get(i).move(bulletList.get(i).getRotation());
+            bullet.move(bullet.getRotation());
 
-            if(bulletList.get(i).isOutOfScreen(camera))
+            if(bullet.isOutOfScreen(camera))
             {
-                bulletList.get(i).getSprite().getTexture().dispose();
-                bulletList.remove(i);
+                bullet.getSprite().getTexture().dispose();
+                bulletList.remove(bullet);
             }
 
         }
@@ -264,16 +264,17 @@ class GameScreen implements Screen {
         game.batch.begin();
         game.batch.draw(gamebg, 0, 0, camera.viewportWidth, camera.viewportHeight);
 
-        for(int i = 0; i < bulletList.size(); i++) {bulletList.get(i).draw(game.batch);}
-
-        for(int i = 0; i < enemyList.size(); i++){enemyList.get(i).draw(game.batch);}
+        for(Bullet bullet : bulletList) {bullet.draw(game.batch);}
 
         tank.draw(game.batch);
+
+        for(Enemy enemy : enemyList){enemy.draw(game.batch);}
+
         controller.drawControls(game.batch);
 
         game.batch.end();
 
-        //drawCollisionRects();
+        drawCollisionRects();
 
 
     }

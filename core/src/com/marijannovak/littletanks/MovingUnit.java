@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -16,7 +15,6 @@ class MovingUnit {
 
     protected Sprite unitSprite;
     protected int unitSpeed = 5;
-
 
 
     MovingUnit(Texture texture) {
@@ -97,6 +95,7 @@ class MovingUnit {
 
         boundingPolygon.setVertices(vertices);
         boundingPolygon.setOrigin(this.unitSprite.getX() + this.unitSprite.getWidth()/2 ,this.unitSprite.getY() + this.unitSprite.getHeight()/2);
+        boundingPolygon.setScale(this.unitSprite.getScaleX(), this.unitSprite.getScaleY());
         boundingPolygon.setRotation(this.unitSprite.getRotation());
 
         return boundingPolygon;
