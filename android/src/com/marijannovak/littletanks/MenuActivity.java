@@ -26,7 +26,9 @@ public class MenuActivity extends Activity implements View.OnClickListener{
         playButton.setOnClickListener(this);
         scoreButton.setOnClickListener(this);
     }
-//TODO malo to sredi
+
+
+//TODO database
     @Override
     public void onClick(View v) {
         switch (v.getId())

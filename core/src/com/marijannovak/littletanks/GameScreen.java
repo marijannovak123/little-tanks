@@ -95,7 +95,7 @@ class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-//todo kretanje enemy muzika multi touch , TEKST LOSE LIFE; SCORE L LIVES, vise tenkova s vremenom?
+//todo kretanje enemy, muzika , TEKST LOSE LIFE; SCORE L LIVES, vise tenkova s vremenom?
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

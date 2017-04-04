@@ -15,7 +15,6 @@ class Bullet extends MovingUnit {
         super(texture);
         setSpeed(15);
     }
-//TODO ollision bullet sound i tekstura za boom
 
     @Override
     public void move(float angle) {
