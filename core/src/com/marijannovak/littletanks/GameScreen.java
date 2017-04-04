@@ -8,34 +8,42 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Random;
 
 /**
  * Created by marij on 27.3.2017..
  */
 
-public class GameScreen implements Screen {
-//TODO iz run! pogledat sta fali,..enemy, screenwrap..soudnovi..backgroud..grafike i buttoni za start, database
+class GameScreen implements Screen {
+//TODO iz run! pogledat sta fali,..enemy, screenwrap..soudnovi..backgroud..grafike i buttoni za start, database, animacijacdead tank
+//TODO enemye na pocetku initspawn, poslije drukcije..kad se ubije tenk opet init spawn
+    private final LittleTanks game;
+    private final static String TAG = "LOGIRANJE";
+    private OrthographicCamera camera;
 
-    final LittleTanks game;
-    public final static String TAG = "LOGIRANJE";
-    OrthographicCamera camera;
+    private Player tank;
+    private Controls controller;
+    private ArrayList<Bullet> bulletList;
+    private ArrayList<Enemy> enemyList;
+    private ShapeRenderer shapeRenderer;
+    private Texture gamebg;
+    private Sound fireSound;
+    private Sound shotSound;
 
-    Player tank;
-    Controls controller;
-    ArrayList<Rectangle> screenBounds;
-    ArrayList<Bullet> bulletList;
-    ShapeRenderer shapeRenderer;
-    Texture gamebg;
-    Sound fireSound;
-
-    float gameTime = 0;
+    private float gameTime = 0;
     private float lastFireTime = 0;
-    int i = 0;
+    private float lastSpeedUp = 0;
+    private float blockTankTime = 0;
+
+    private Random rand;
+    boolean tankCanMove = true;
+
+    boolean [ ] spotTaken;
+    Vector2 [] enemySpots;
+    final static int numberOfEnemies = 4;
 
     public GameScreen(final LittleTanks game)
     {
@@ -60,25 +68,34 @@ public class GameScreen implements Screen {
         tank.setPosition(camera.viewportWidth/2, camera.viewportHeight/2);
 
         controller = new Controls(new Texture("joystick.png"), new Texture ("fire.png"), (int) camera.viewportWidth);
-        controller.setControlsScale(camera.viewportHeight/500);
-        controller.setJoystickPos(controller.getJoystickPos().x, controller.getJoystickPos().y);
-        controller.setFirePos(controller.getFirePos().x, controller.getFirePos().y);
+        controller.setJoystickSize(camera.viewportHeight/3, camera.viewportHeight/3);
+        controller.setFireSize(camera.viewportHeight/3, camera.viewportHeight/3);
+        controller.setJoystickCenter(new Vector2(controller.getJoystickSprite().getWidth()/2, controller.getJoystickSprite().getHeight()/2));
 
-        screenBounds = new ArrayList<Rectangle>();
-        screenBounds.add(new Rectangle(0, camera.viewportHeight - 10, camera.viewportWidth, 10));
-        screenBounds.add(new Rectangle(0, 0, 10, camera.viewportHeight));
-        screenBounds.add(new Rectangle(camera.viewportWidth - 10, 0, 10, camera.viewportHeight));
-        screenBounds.add(new Rectangle(0, 0, camera.viewportWidth, 10));
+
+        controller.setJoystickPos(0,0);
+        controller.setFirePos(camera.viewportWidth - controller.getFireSprite().getWidth(), 0);
 
         bulletList = new ArrayList<Bullet>();
+        enemyList = new ArrayList<Enemy>();
 
         fireSound = Gdx.audio.newSound(Gdx.files.internal("firesound.wav"));
+        shotSound = Gdx.audio.newSound(Gdx.files.internal("shot.wav"));
+
+        rand = new Random();
+
+        spotTaken = new boolean[4];
+        enemySpots = new Vector2[4];
+        enemySpots[0] = new Vector2(camera.viewportWidth/4, camera.viewportHeight/3);
+        enemySpots[1] = new Vector2(camera.viewportWidth/4, camera.viewportHeight*2/3);
+        enemySpots[2] = new Vector2(camera.viewportWidth*3/4, camera.viewportHeight*2/3);
+        enemySpots[3] = new Vector2(camera.viewportWidth*3/4, camera.viewportHeight*3);
 
     }
 
     @Override
     public void render(float delta) {
-
+//todo kretanje enemy muzika multi touch , TEKST LOSE LIFE; SCORE L LIFES
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -87,53 +104,154 @@ public class GameScreen implements Screen {
         //Gdx.app.log(TAG, "Kut tenka je " + tank.getRotation());
         //Gdx.app.log(TAG, "Broj metaka: " + bulletList.size());
 
-        handleInput();
+        spawnEnemies();
 
-        handleBullets();
+        checkTankEnemyCollision();
+
+        if(!tankCanMove && (gameTime - blockTankTime) > 1)
+        {
+            tankCanMove = true;
+        }
+
+        removeBullet();
+
+        speedUpEnemies();
+
+        moveEnemies();
+
+        for(int i = 0; i < numberOfEnemies; i++) if(enemyList.size() == numberOfEnemies) spotTaken[i] = false;
+
+        moveBullets();
+
+        if(tankCanMove) handleInput();
 
         drawGame();
 
     }
 
-    private void handleInput() {
+    private void checkTankEnemyCollision() {
 
-        if(Gdx.input.isTouched()) {
-
-            Vector3 touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-            camera.unproject(touch);
-
-            if(controller.getJoystickSprite().getBoundingRectangle().contains(touch.x, touch.y))
-            {
-                screenWrapTank();
-                tank.move(controller.getJoystickAngle(touch));
-            }
-
-            if(controller.getFireSprite().getBoundingRectangle().contains(touch.x, touch.y)){
-
-                if(gameTime-lastFireTime > 0.5 && bulletList.size() < 5)
-                {
-                    tank.fire(bulletList, new Bullet(new Texture("bullet.png")), camera.viewportHeight / 500);
-                    fireSound.play(0.5f);
-                    lastFireTime = gameTime;
-                }
-
-                else
-                {
-                    //TODO nope
-                }
-            }
+        if(tank.didCollide(enemyList))
+        {
+            tank.loseLife();//TODO ANIMACIJA? ZVUK?
+            tankCanMove = false;
+            blockTankTime = gameTime;
         }
     }
 
-    private void handleBullets() {
+    private void speedUpEnemies() {
+
+        if(gameTime - lastSpeedUp > 20)
+        {
+            for(int i = 0; i < enemyList.size(); i++)
+            {
+                enemyList.get(i).speedUp(1);
+            }
+
+            lastSpeedUp = gameTime;
+        }
+    }
+
+    private void moveEnemies() {
+
+        for(int i = 0; i < enemyList.size(); i++) //kreci neprijatelje
+        {
+            enemyList.get(i).move(enemyList.get(i).getRotation());
+
+            if(enemyList.get(i).getPosition().x > camera.viewportWidth)enemyList.get(i).getSprite().setPosition(0, enemyList.get(i).getPosition().y);
+            if(enemyList.get(i).getPosition().x < -enemyList.get(i).getSprite().getWidth()) enemyList.get(i).getSprite().setPosition(camera.viewportWidth, enemyList.get(i).getPosition().y);
+            if(enemyList.get(i).getPosition().y > camera.viewportHeight) enemyList.get(i).getSprite().setPosition(enemyList.get(i).getPosition().x, 0);
+            if(enemyList.get(i).getPosition().y < -enemyList.get(i).getSprite().getHeight()) enemyList.get(i).getSprite().setPosition(enemyList.get(i).getPosition().x, camera.viewportHeight);
+        }
+    }
+
+    private void removeBullet() {
+
+        for (int i = 0; i < enemyList.size(); i++) //ukloni upucane neprijatelje i metak koji je upucao
+        {
+
+            if(enemyList.get(i).isShot(bulletList) >= 0) {
+                Gdx.app.log(TAG, "shot");
+
+                int whichShot = enemyList.get(i).isShot(bulletList);
+                enemyList.get(i).getSprite().getTexture().dispose();
+                enemyList.remove(i);
+                bulletList.get(whichShot).getSprite().getTexture().dispose();
+                bulletList.remove(whichShot);
+                shotSound.play();
+            }
+
+
+        }
+    }
+
+    private void spawnEnemies() {
+
+        if(enemyList.size() < numberOfEnemies && enemyList.size() >= 0) //stvori neprijatelje
+        {
+            enemyList.add(new Enemy(new Texture("enemy.png")));
+
+            int i;
+
+            for(i = 0; i < numberOfEnemies; i++) {
+
+                if (!spotTaken[i])
+                {
+                    spotTaken[i] = true;
+                    break;
+                }
+
+            }
+
+            enemyList.get(enemyList.size()-1).setPosition(enemySpots[i].x, enemySpots[i].y);
+            enemyList.get(enemyList.size()-1).setScale(camera.viewportHeight/600);
+            enemyList.get(enemyList.size()-1).rotateTo(rand.nextInt(360));
+            enemyList.get(enemyList.size()-1).setSpeed(1);
+
+        }
+    }
+
+    private void handleInput() {
+
+        for(int i = 0; i < 2; i ++) {
+            if (Gdx.input.isTouched(i)) {
+
+
+                Vector3 touch = new Vector3(Gdx.input.getX(i), Gdx.input.getY(i), 0);
+                camera.unproject(touch);
+
+
+                if (controller.getJoystickSprite().getBoundingRectangle().contains(touch.x, touch.y)) {
+                    screenWrapTank();
+                    tank.move(controller.getJoystickAngle(touch));
+                }
+
+                if (controller.getFireSprite().getBoundingRectangle().contains(touch.x, touch.y)) {
+
+                    if (gameTime - lastFireTime > 0.5 && bulletList.size() < 5) {
+                        tank.fire(bulletList, new Bullet(new Texture("bullet.png")), camera.viewportHeight / 500);
+                        fireSound.play(0.5f);
+                        lastFireTime = gameTime;
+                    } else {
+                        //TODO nope
+                    }
+                }
+            }
+
+        }
+    }
+
+
+    private void moveBullets() {
 
         for(int i = 0; i < bulletList.size(); i++)
         {
             bulletList.get(i).move(bulletList.get(i).getRotation());
+
             if(bulletList.get(i).isOutOfScreen(camera))
             {
                 bulletList.get(i).getSprite().getTexture().dispose();
-                bulletList.remove(bulletList.get(i));
+                bulletList.remove(i);
             }
 
         }
@@ -141,14 +259,20 @@ public class GameScreen implements Screen {
     }
 
     private void drawGame() {
+
         game.batch.begin();
         game.batch.draw(gamebg, 0, 0, camera.viewportWidth, camera.viewportHeight);
 
-        for(int i = 0; i < bulletList.size(); i++) bulletList.get(i).draw(game.batch);
+        for(int i = 0; i < bulletList.size(); i++) {bulletList.get(i).draw(game.batch);}
+
+        for(int i = 0; i < enemyList.size(); i++){enemyList.get(i).draw(game.batch);}
+
         tank.draw(game.batch);
         controller.drawControls(game.batch);
 
         game.batch.end();
+
+
 
     }
 

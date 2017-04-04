@@ -8,7 +8,8 @@ import android.widget.Button;
 
 public class MenuActivity extends Activity implements View.OnClickListener{
 
-    Button playButton, scoreButton;
+    private Button playButton;
+    private Button scoreButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

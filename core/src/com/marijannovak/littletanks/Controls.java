@@ -6,26 +6,22 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import java.awt.Point;
 
 /**
  * Created by marij on 27.3.2017..
  */
 
-public class Controls {
+class Controls {
 
-    private Sprite joystickSprite;
-    private Sprite fireSprite;
-    Vector2 joystickCenter;
-    Vector2 fireCenter;
+    private final Sprite joystickSprite;
+    private final Sprite fireSprite;
+    private Vector2 joystickCenter;
 
 
     public Controls(Texture joystickTexture, Texture fireTexture, int screenWidth)
     {
         this.joystickSprite = new Sprite(joystickTexture);
         this.fireSprite = new Sprite(fireTexture);
-        this.joystickCenter = new Vector2(this.joystickSprite.getWidth()*1.2f, this.joystickSprite.getHeight()*1.2f);
-        this.fireCenter = new Vector2(screenWidth - this.fireSprite.getWidth()*1.2f, this.fireSprite.getHeight()*1.2f);
 
     }
 
@@ -53,15 +49,19 @@ public class Controls {
         return this.joystickSprite;
     }
 
-    public void setControlsScale(float scale)
+    public void setJoystickSize(float width, float height)
     {
-        this.joystickSprite.setScale(scale);
-        this.fireSprite.setScale(scale);
+        this.joystickSprite.setSize(width, height);
+    }
+
+    public void setFireSize(float width, float height)
+    {
+        this.fireSprite.setSize(width, height);
     }
 
     public void setJoystickPos(float x, float y)
     {
-        this.joystickSprite.setCenter(x, y);
+        this.joystickSprite.setPosition(x, y);
     }
 
     public Vector2 getJoystickPos()
@@ -76,11 +76,16 @@ public class Controls {
 
     public void setFirePos(float x, float y)
     {
-        this.fireSprite.setCenter(x, y);
+        this.fireSprite.setPosition(x, y);
     }
 
     public Vector2 getFirePos()
     {
-        return this.fireCenter;
+        return new Vector2(fireSprite.getX(), fireSprite.getY());
+    }
+
+    public void setJoystickCenter(Vector2 joystickCenter) {
+        this.joystickCenter = joystickCenter;
     }
 }
+

@@ -1,28 +1,22 @@
 
 package com.marijannovak.littletanks;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.ArrayList;
-
-import static com.marijannovak.littletanks.GameScreen.TAG;
 
 /**
  * Created by marij on 27.3.2017..
  */
 
-public class MovingUnit {
+class MovingUnit {
 
-    public Sprite unitSprite;
-    public int unitSpeed = 5;
+    Sprite unitSprite;
+    int unitSpeed = 5;
 
-    public MovingUnit(Texture texture) {
+    MovingUnit(Texture texture) {
         this.unitSprite = new Sprite(texture);
     }
 
@@ -69,16 +63,6 @@ public class MovingUnit {
         this.unitSprite.setRotation(angle);
     }
 
-    public void rotateBy(float angle)
-    {
-        this.unitSprite.rotate(angle);
-    }
-
-    public void setSprite(Sprite sprite)
-    {
-        this.unitSprite.set(sprite);
-    }
-
     public Sprite getSprite()
     {
         return this.unitSprite;
@@ -89,21 +73,13 @@ public class MovingUnit {
         this.unitSpeed = speed;
     }
 
-    public boolean checkWall(ArrayList<Rectangle> rectList)
-    {
-        boolean check =  false;
-
-        for(int i = 0; i < rectList.size(); i++)
-        {
-            if(Intersector.overlaps(this.unitSprite.getBoundingRectangle(), rectList.get(i))) check = true;
-
-        }
-
-        return check;
-    }
-
     public void setScale(float scale) {
 
         this.unitSprite.setScale(scale);
+    }
+
+    public void speedUp(int speed)
+    {
+        this.unitSpeed += speed;
     }
 }

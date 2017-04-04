@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
-public class LittleTanks extends Game {
+class LittleTanks extends Game {
 
 	SpriteBatch batch;
 

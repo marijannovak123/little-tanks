@@ -1,8 +1,10 @@
 package com.marijannovak.littletanks;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
@@ -34,15 +36,21 @@ class Player extends MovingUnit {
 
     public void loseLife()
     {
-
-    }
-
-    public void dead()
-    {
-
+        this.playerLives--;
+        this.unitSprite.setCenter(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+        this.unitSprite.setRotation(0);
     }
 
 
+    public boolean didCollide(ArrayList<Enemy> enemyList) {
 
+        boolean check = false;
 
+        for(int i = 0; i < enemyList.size(); i++)
+        {
+            if(Intersector.overlaps(this.unitSprite.getBoundingRectangle(), enemyList.get(i).getSprite().getBoundingRectangle())) check = true;
+        }
+
+        return check;
+    }
 }

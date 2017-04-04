@@ -2,11 +2,6 @@ package com.marijannovak.littletanks;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Intersector;
-
-import java.util.ArrayList;
 
 /**
  * Created by marij on 27.3.2017..
@@ -18,22 +13,9 @@ class Bullet extends MovingUnit {
     Bullet(Texture texture)
     {
         super(texture);
-        setSpeed(10);
+        setSpeed(15);
     }
-
-    public void explode(ArrayList<Bullet> bulletList, Texture texture)//eksplozija
-    {
-        this.setTexture(texture);
-        //todo collision bullet sound i tekstura za boom
-    }
-
-
-
-
-    public void setBulletScale(float scale)
-    {
-        this.unitSprite.setScale(scale);
-    }
+//TODO ollision bullet sound i tekstura za boom
 
     @Override
     public void move(float angle) {
