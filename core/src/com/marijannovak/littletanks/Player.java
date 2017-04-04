@@ -48,7 +48,7 @@ class Player extends MovingUnit {
 
         for(int i = 0; i < enemyList.size(); i++)
         {
-            if(Intersector.overlaps(this.unitSprite.getBoundingRectangle(), enemyList.get(i).getSprite().getBoundingRectangle())) check = true;
+            if(Intersector.overlapConvexPolygons(this.getBoundingPolygon(), enemyList.get(i).getBoundingPolygon())) check = true;
         }
 
         return check;

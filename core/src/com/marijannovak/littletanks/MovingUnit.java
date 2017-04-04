@@ -4,8 +4,9 @@ package com.marijannovak.littletanks;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
 
 /**
  * Created by marij on 27.3.2017..
@@ -13,8 +14,10 @@ import com.badlogic.gdx.math.Vector2;
 
 class MovingUnit {
 
-    Sprite unitSprite;
-    int unitSpeed = 5;
+    protected Sprite unitSprite;
+    protected int unitSpeed = 5;
+
+
 
     MovingUnit(Texture texture) {
         this.unitSprite = new Sprite(texture);
@@ -81,5 +84,21 @@ class MovingUnit {
     public void speedUp(int speed)
     {
         this.unitSpeed += speed;
+    }
+
+    public Polygon getBoundingPolygon()
+    {
+        Polygon boundingPolygon = new Polygon();
+
+        float [] vertices = {this.unitSprite.getX(),this.unitSprite.getY(),
+                this.unitSprite.getX(), this.unitSprite.getY()+this.unitSprite.getHeight(),
+                this.unitSprite.getX()+this.unitSprite.getWidth(), this.unitSprite.getY()+this.unitSprite.getHeight(),
+                this.unitSprite.getX()+this.unitSprite.getWidth(), this.unitSprite.getY()};
+
+        boundingPolygon.setVertices(vertices);
+        boundingPolygon.setOrigin(this.unitSprite.getX() + this.unitSprite.getWidth()/2 ,this.unitSprite.getY() + this.unitSprite.getHeight()/2);
+        boundingPolygon.setRotation(this.unitSprite.getRotation());
+
+        return boundingPolygon;
     }
 }

@@ -3,6 +3,7 @@ package com.marijannovak.littletanks;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -272,8 +273,21 @@ class GameScreen implements Screen {
 
         game.batch.end();
 
+        //drawCollisionRects();
 
 
+    }
+
+    private void drawCollisionRects() {
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.polygon(tank.getBoundingPolygon().getTransformedVertices());
+
+        for (Enemy enemy : enemyList) {
+            shapeRenderer.polygon(enemy.getBoundingPolygon().getTransformedVertices());  }
+
+        shapeRenderer.end();
     }
 
     private void screenWrapTank() {
