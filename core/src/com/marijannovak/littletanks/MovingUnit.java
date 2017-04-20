@@ -95,7 +95,6 @@ class MovingUnit {
 
         boundingPolygon.setVertices(vertices);
         boundingPolygon.setOrigin(this.unitSprite.getX() + this.unitSprite.getWidth()/2 ,this.unitSprite.getY() + this.unitSprite.getHeight()/2);
-        boundingPolygon.setScale(this.unitSprite.getScaleX(), this.unitSprite.getScaleY());
         boundingPolygon.setRotation(this.unitSprite.getRotation());
 
         return boundingPolygon;

@@ -53,4 +53,9 @@ class Player extends MovingUnit {
 
         return check;
     }
+
+    public int getLives()
+    {
+        return this.playerLives;
+    }
 }

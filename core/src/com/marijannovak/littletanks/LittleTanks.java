@@ -12,9 +12,14 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
+import javax.security.auth.callback.Callback;
+
+import jdk.nashorn.internal.codegen.CompilerConstants;
+
 class LittleTanks extends Game {
 
 	SpriteBatch batch;
+	GameOverCallback gameOverCallback;
 
 	@Override
 	public void create () {
@@ -31,5 +36,14 @@ class LittleTanks extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
+	}
+
+	public interface GameOverCallback{
+		public void gameOver(int score);
+	}
+
+	public void setGameOverCallback(GameOverCallback callback)
+	{
+		this.gameOverCallback = callback;
 	}
 }

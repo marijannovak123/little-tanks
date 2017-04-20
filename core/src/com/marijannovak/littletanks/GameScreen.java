@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -29,8 +31,14 @@ class GameScreen implements Screen {
     private Controls controller;
     private ArrayList<Bullet> bulletList;
     private ArrayList<Enemy> enemyList;
+    private ArrayList<Sprite> lifeSprites;
+
     private ShapeRenderer shapeRenderer;
     private Texture gamebg;
+    private Texture playerTexture;
+    private BitmapFont font;GlyphLayout layout;
+
+
     private Sound fireSound;
     private Sound shotSound;
 
@@ -39,12 +47,16 @@ class GameScreen implements Screen {
     private float lastSpeedUp = 0;
     private float blockTankTime = 0;
 
-    private Random rand;
-    boolean tankCanMove = true;
 
-    boolean [ ] spotTaken;
-    Vector2 [] enemySpots;
-    final static int numberOfEnemies = 4;
+    private Random rand;
+    private boolean tankCanMove = true;
+
+    private boolean [ ] spotTaken;
+    private Vector2 [] enemySpots;
+
+    private int numberOfEnemies = 4;
+    private int score = 0;
+
 
     public GameScreen(final LittleTanks game)
     {
@@ -56,17 +68,40 @@ class GameScreen implements Screen {
 
     private void init() {
 
-        game.batch = new SpriteBatch();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         shapeRenderer = new ShapeRenderer();
 
+        playerTexture = new Texture("player.png");
         gamebg = new Texture("gamebg.jpg");
 
-        tank = new Player(new Texture("player.png"));
+        tank = new Player(playerTexture);
         tank.setScale(camera.viewportHeight/500);
         tank.setPosition(camera.viewportWidth/2, camera.viewportHeight/2);
+
+
+        lifeSprites = new ArrayList<Sprite>();
+
+        for(int i = 0; i < tank.getLives(); i++)
+        {
+            lifeSprites.add(new Sprite(playerTexture));
+            lifeSprites.get(i).setSize(camera.viewportWidth/40, camera.viewportHeight/20);
+
+            if(i == 0) {
+
+                lifeSprites.get(i).setPosition(lifeSprites.get(i).getWidth()*0.2f, camera.viewportHeight - lifeSprites.get(i).getHeight()*2);
+            }
+            else
+            {
+                lifeSprites.get(i).setPosition(lifeSprites.get(i-1).getX() + lifeSprites.get(i).getWidth()*1.2f, camera.viewportHeight - lifeSprites.get(i).getHeight()*2);
+
+            }
+        }
+
+        font = new BitmapFont();
+        font.getData().setScale(camera.viewportHeight/300);
+
 
         controller = new Controls(new Texture("joystick.png"), new Texture ("fire.png"), (int) camera.viewportWidth);
         controller.setJoystickSize(camera.viewportHeight/3, camera.viewportHeight/3);
@@ -95,11 +130,18 @@ class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-//todo kretanje enemy, muzika , TEKST LOSE LIFE; SCORE L LIVES, vise tenkova s vremenom?
+
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        //Gdx.app.log(TAG, "Lives: " + tank.getLives());
+        Gdx.app.log(TAG, "Score : " + this.score);
+
+        if(tank.getLives() == 0) game.gameOverCallback.gameOver(score); //TODO OVDJE DISPOSE SVEGA
+
         gameTime += delta;
+
+        updateScore(1);
 
         //Gdx.app.log(TAG, "Kut tenka je " + tank.getRotation());
         //Gdx.app.log(TAG, "Broj metaka: " + bulletList.size());
@@ -113,7 +155,7 @@ class GameScreen implements Screen {
             tankCanMove = true;
         }
 
-        removeBullet();
+        removeBulletKillEnemy();
 
         speedUpEnemies();
 
@@ -129,12 +171,21 @@ class GameScreen implements Screen {
 
     }
 
+    private void updateScore(float addedScore) {
+
+        this.score += addedScore;
+    }
+
     private void checkTankEnemyCollision() {
 
         if(tank.didCollide(enemyList))
         {
-            tank.loseLife();//TODO ANIMACIJA? ZVUK?
+            tank.loseLife();
+
+            if(lifeSprites.size() >= 1) lifeSprites.remove(lifeSprites.size() - 1);
+            //TODO ANIMACIJA? ZVUK?
             tankCanMove = false;
+
             blockTankTime = gameTime;
         }
     }
@@ -165,7 +216,7 @@ class GameScreen implements Screen {
         }
     }
 
-    private void removeBullet() {
+    private void removeBulletKillEnemy() {
 
         for (int i = 0; i < enemyList.size(); i++) //ukloni upucane neprijatelje i metak koji je upucao
         {
@@ -180,6 +231,8 @@ class GameScreen implements Screen {
                 bulletList.get(whichShot).getSprite().getTexture().dispose();
                 bulletList.remove(whichShot);
                 shotSound.play();
+
+                updateScore(50);
             }
 
 
@@ -215,12 +268,12 @@ class GameScreen implements Screen {
     private void handleInput() {
 
         for(int i = 0; i < 2; i ++) {
+
             if (Gdx.input.isTouched(i)) {
 
 
                 Vector3 touch = new Vector3(Gdx.input.getX(i), Gdx.input.getY(i), 0);
                 camera.unproject(touch);
-
 
                 if (controller.getJoystickSprite().getBoundingRectangle().contains(touch.x, touch.y)) {
                     screenWrapTank();
@@ -262,6 +315,7 @@ class GameScreen implements Screen {
     private void drawGame() {
 
         game.batch.begin();
+
         game.batch.draw(gamebg, 0, 0, camera.viewportWidth, camera.viewportHeight);
 
         for(Bullet bullet : bulletList) {bullet.draw(game.batch);}
@@ -270,11 +324,15 @@ class GameScreen implements Screen {
 
         for(Enemy enemy : enemyList){enemy.draw(game.batch);}
 
+        for (Sprite lifeSprite : lifeSprites) lifeSprite.draw(game.batch);
+
+        font.draw(game.batch, "Score: " + String.valueOf(this.score),0, camera.viewportHeight);
+
         controller.drawControls(game.batch);
 
         game.batch.end();
 
-        drawCollisionRects();
+      //  drawCollisionRects();
 
 
     }
