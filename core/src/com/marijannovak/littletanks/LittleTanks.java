@@ -20,6 +20,12 @@ class LittleTanks extends Game {
 
 	SpriteBatch batch;
 	GameOverCallback gameOverCallback;
+	String playerName;
+
+	public LittleTanks(String name)
+	{
+		this.playerName = name;
+	}
 
 	@Override
 	public void create () {
@@ -39,7 +45,7 @@ class LittleTanks extends Game {
 	}
 
 	public interface GameOverCallback{
-		public void gameOver(int score);
+		public void gameOver(String player, int score, int time, int killed);
 	}
 
 	public void setGameOverCallback(GameOverCallback callback)

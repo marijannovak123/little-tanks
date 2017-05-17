@@ -9,6 +9,7 @@ import android.widget.Button;
 
 public class MenuActivity extends Activity implements View.OnClickListener{
 
+    private static final String KEY_PLAYER = "key_player";
     private Button playButton;
     private Button scoreButton;
 
@@ -36,14 +37,18 @@ public class MenuActivity extends Activity implements View.OnClickListener{
             case R.id.playBtn:
 
                 Intent playIntent = new Intent(this, AndroidLauncher.class);
+                playIntent.putExtra(KEY_PLAYER, "Test Name");
                 startActivity(playIntent);
                 finish();
+
                 break;
 
             case R.id.scoresBtn:
-                /*Intent scoreIntent = new Intent(this, Scores.class);
+
+                Intent scoreIntent = new Intent(this, HighScores.class);
                 startActivity(scoreIntent);
-                finish();*/
+                finish();
+
                 break;
         }
     }

@@ -36,7 +36,8 @@ class GameScreen implements Screen {
     private ShapeRenderer shapeRenderer;
     private Texture gamebg;
     private Texture playerTexture;
-    private BitmapFont font;GlyphLayout layout;
+    private BitmapFont font;
+    GlyphLayout layout;
 
 
     private Sound fireSound;
@@ -56,6 +57,7 @@ class GameScreen implements Screen {
 
     private int numberOfEnemies = 4;
     private int score = 0;
+    private int enemiesKilled = 0;
 
 
     public GameScreen(final LittleTanks game)
@@ -137,7 +139,7 @@ class GameScreen implements Screen {
         //Gdx.app.log(TAG, "Lives: " + tank.getLives());
         Gdx.app.log(TAG, "Score : " + this.score);
 
-        if(tank.getLives() == 0) game.gameOverCallback.gameOver(score); //TODO OVDJE DISPOSE SVEGA
+        if(tank.getLives() == 0) game.gameOverCallback.gameOver(game.playerName, score, (int) gameTime, enemiesKilled); //TODO OVDJE DISPOSE SVEGA
 
         gameTime += delta;
 
@@ -232,6 +234,7 @@ class GameScreen implements Screen {
                 bulletList.remove(whichShot);
                 shotSound.play();
 
+                enemiesKilled++;
                 updateScore(50);
             }
 
