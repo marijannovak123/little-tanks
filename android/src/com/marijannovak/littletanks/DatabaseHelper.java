@@ -37,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL("CREATE TABLE " + DatabaseScheme.SCORE_TABLE + " (" + DatabaseScheme.PLAYER + " TEXT, " +
+        db.execSQL("CREATE TABLE " + DatabaseScheme.SCORE_TABLE + " (" + DatabaseScheme.PLAYER_ID + " INTEGER PRIMARY KEY, " + DatabaseScheme.PLAYER + " TEXT, " +
                 DatabaseScheme.PLAYTIME + " INT, " + DatabaseScheme.SCORE + " INT, " +
                 DatabaseScheme.KILLED + " INT);");
     }
@@ -54,12 +54,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cValues = new ContentValues();
 
         cValues.put(DatabaseScheme.PLAYER, score.getPlayerName());
-        cValues.put(DatabaseScheme.SCORE, score.getPlayerName());
-        cValues.put(DatabaseScheme.PLAYTIME, score.getPlayerName());
-        cValues.put(DatabaseScheme.KILLED, score.getPlayerName());
+        cValues.put(DatabaseScheme.SCORE, score.getScore());
+        cValues.put(DatabaseScheme.PLAYTIME, score.getPlayTime());
+        cValues.put(DatabaseScheme.KILLED, score.getKilled());
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.insert(DatabaseScheme.SCORE_TABLE, DatabaseScheme.PLAYER, cValues);
+        db.insert(DatabaseScheme.SCORE_TABLE, DatabaseScheme.PLAYER_ID, cValues);
         db.close();
     }
 
@@ -75,10 +75,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
 
                 ScoreItem score = new ScoreItem();
-                score.setPlayerName(scoreCursor.getString(0));
-                score.setScore(scoreCursor.getInt(1));
+                score.setPlayerName(scoreCursor.getString(1));
                 score.setPlayTime(scoreCursor.getInt(2));
-                score.setKilled(scoreCursor.getInt(3));
+                score.setScore(scoreCursor.getInt(3));
+                score.setKilled(scoreCursor.getInt(4));
 
                 scoreList.add(score);
 
@@ -91,10 +91,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return scoreList;
     }
 
-    public void deleteScoreItem(String player)
+    public void deleteScoreItem(int id)
     {
         SQLiteDatabase writeableDatabase = this.getWritableDatabase();
-        writeableDatabase.delete(DatabaseScheme.SCORE_TABLE, DatabaseScheme.PLAYER + " = ? ", new String[] {player});
+        writeableDatabase.delete(DatabaseScheme.SCORE_TABLE, DatabaseScheme.PLAYER_ID + " = ? ", new String[] {String.valueOf(id)});
     }
 
     public static class DatabaseScheme
@@ -103,6 +103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         private static final int VERSION = 1;
         private static final String DB_NAME = "scoresDB.db";
         private static final String SCORE_TABLE = "SCORES";
+        private static final String PLAYER_ID = "id";
         private static final String PLAYER = "player";
         private static final String SCORE  = "score";
         private static final String PLAYTIME = "playtime";

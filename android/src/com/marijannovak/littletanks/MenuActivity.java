@@ -10,8 +10,10 @@ import android.widget.Button;
 public class MenuActivity extends Activity implements View.OnClickListener{
 
     private static final String KEY_PLAYER = "key_player";
+    private String loginName;
     private Button playButton;
     private Button scoreButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
             case R.id.playBtn:
 
                 Intent playIntent = new Intent(this, AndroidLauncher.class);
-                playIntent.putExtra(KEY_PLAYER, "Test Name");
+                playIntent.putExtra(KEY_PLAYER, "Marijan");
                 startActivity(playIntent);
                 finish();
 

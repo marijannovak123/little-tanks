@@ -137,16 +137,20 @@ class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //Gdx.app.log(TAG, "Lives: " + tank.getLives());
-        Gdx.app.log(TAG, "Score : " + this.score);
+        //Gdx.app.log(TAG, "Score : " + this.score);
+        //Gdx.app.log(TAG, "Kut tenka je " + tank.getRotation());
+        //Gdx.app.log(TAG, "Broj metaka: " + bulletList.size());
 
-        if(tank.getLives() == 0) game.gameOverCallback.gameOver(game.playerName, score, (int) gameTime, enemiesKilled); //TODO OVDJE DISPOSE SVEGA
+        if(tank.getLives() == 0)
+        {
+            game.gameOverCallback.gameOver(game.playerName, score, (int) gameTime, enemiesKilled);
+        }
+
+        //TODO OVDJE DISPOSE SVEGA
 
         gameTime += delta;
 
         updateScore(1);
-
-        //Gdx.app.log(TAG, "Kut tenka je " + tank.getRotation());
-        //Gdx.app.log(TAG, "Broj metaka: " + bulletList.size());
 
         spawnEnemies();
 

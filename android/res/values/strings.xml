@@ -4,5 +4,9 @@
     <string name="app_name">Little Tanks</string>
     <string name="play">PLAY</string>
     <string name="scores">SCORES</string>
+    <string name="play_time">Play time:</string>
+    <string name="score">Score:</string>
+    <string name="enemies_killed">Enemies killed:</string>
+    <string name="player_name">Player name:</string>
 
 </resources>
