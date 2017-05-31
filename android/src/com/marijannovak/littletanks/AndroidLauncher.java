@@ -25,7 +25,7 @@ public class AndroidLauncher extends AndroidApplication implements LittleTanks.G
 
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useImmersiveMode = true;
-
+		config.useAccelerometer = true;
 
 		Intent startingIntent = this.getIntent();
 

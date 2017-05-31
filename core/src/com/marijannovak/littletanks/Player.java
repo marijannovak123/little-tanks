@@ -24,14 +24,19 @@ class Player extends MovingUnit {
         this.playerLives = 4;
     }
 
-    void fire(ArrayList<Bullet> list, Bullet bullet, float bulletScale)
-    {
-        list.add(bullet);
-        bullet.setPosition(this.unitSprite.getX() + this.unitSprite.getWidth()/2, this.unitSprite.getY() + this.unitSprite.getHeight()/2);
-        bullet.getSprite().setOriginCenter();
-        bullet.rotateTo(this.unitSprite.getRotation());
-        bullet.setScale(bulletScale);
 
+
+    public void moveSensor(float x, float y)
+    {
+
+        //Gdx.app.log("LOGIRANJE", " " + (Math.toDegrees(Math.atan2(y, x)) -90));
+
+        if(this.unitSprite.getRotation() != Math.toDegrees(Math.atan2(x, y)))
+
+            this.unitSprite.setRotation( (float) Math.toDegrees(Math.atan2(-x, y)));
+
+
+        this.unitSprite.translate(x*2,y*2);
     }
 
     public void loseLife()

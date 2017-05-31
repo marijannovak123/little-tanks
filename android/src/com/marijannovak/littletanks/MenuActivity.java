@@ -6,13 +6,14 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MenuActivity extends Activity implements View.OnClickListener{
 
     private static final String KEY_PLAYER = "key_player";
     private String loginName;
-    private Button playButton;
-    private Button scoreButton;
+    private Button playButton, scoreButton;
+    private ImageButton settingsButton;
 
 
     @Override
@@ -25,9 +26,11 @@ public class MenuActivity extends Activity implements View.OnClickListener{
 
         playButton = (Button) findViewById(R.id.playBtn);
         scoreButton = (Button) findViewById(R.id.scoresBtn);
+        settingsButton = (ImageButton) findViewById(R.id.btnSettings);
 
         playButton.setOnClickListener(this);
         scoreButton.setOnClickListener(this);
+        settingsButton.setOnClickListener(this);
     }
 
 
@@ -52,6 +55,15 @@ public class MenuActivity extends Activity implements View.OnClickListener{
                 finish();
 
                 break;
+
+            case R.id.btnSettings:
+
+                Intent settingsIntent = new Intent(this, Settings.class);
+                startActivity(settingsIntent);
+                finish();
+
+                break;
+
         }
     }
 }

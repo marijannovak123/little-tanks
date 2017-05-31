@@ -21,8 +21,7 @@ import java.util.Random;
  */
 
 class GameScreen implements Screen {
-//TODO iz run! pogledat sta fali,..enemy, ..soudnovi...., database, animacijacdead tank
-//TODO enemye na pocetku initspawn, poslije drukcije..kad se ubije tenk opet init spawn
+
     private final LittleTanks game;
     private final static String TAG = "LOGIRANJE";
     private OrthographicCamera camera;
@@ -30,6 +29,7 @@ class GameScreen implements Screen {
     private Player tank;
     private Controls controller;
     private ArrayList<Bullet> bulletList;
+    private ArrayList<Bullet> enemyBulletList;
     private ArrayList<Enemy> enemyList;
     private ArrayList<Sprite> lifeSprites;
 
@@ -37,7 +37,6 @@ class GameScreen implements Screen {
     private Texture gamebg;
     private Texture playerTexture;
     private BitmapFont font;
-    GlyphLayout layout;
 
 
     private Sound fireSound;
@@ -45,6 +44,7 @@ class GameScreen implements Screen {
 
     private float gameTime = 0;
     private float lastFireTime = 0;
+    private float enemyLastFireTime = 0;
     private float lastSpeedUp = 0;
     private float blockTankTime = 0;
 
@@ -58,6 +58,7 @@ class GameScreen implements Screen {
     private int numberOfEnemies = 4;
     private int score = 0;
     private int enemiesKilled = 0;
+    private int enemySpeed = 5;
 
 
     public GameScreen(final LittleTanks game)
@@ -114,6 +115,7 @@ class GameScreen implements Screen {
         controller.setFirePos(camera.viewportWidth - controller.getFireSprite().getWidth(), 0);
 
         bulletList = new ArrayList<Bullet>();
+        enemyBulletList = new ArrayList<Bullet>();
         enemyList = new ArrayList<Enemy>();
 
         fireSound = Gdx.audio.newSound(Gdx.files.internal("firesound.wav"));
@@ -141,12 +143,14 @@ class GameScreen implements Screen {
         //Gdx.app.log(TAG, "Kut tenka je " + tank.getRotation());
         //Gdx.app.log(TAG, "Broj metaka: " + bulletList.size());
 
+        //Gdx.app.log(TAG, "Accelerometer X: " + Gdx.input.getAccelerometerX());
+        //Gdx.app.log(TAG, "Accelerometer Y: " + Gdx.input.getAccelerometerY());
+       //Gdx.app.log(TAG, "Accelerometer Z: " + Gdx.input.getAccelerometerZ());
+
         if(tank.getLives() == 0)
         {
             game.gameOverCallback.gameOver(game.playerName, score, (int) gameTime, enemiesKilled);
         }
-
-        //TODO OVDJE DISPOSE SVEGA
 
         gameTime += delta;
 
@@ -173,6 +177,14 @@ class GameScreen implements Screen {
 
         if(tankCanMove) handleInput();
 
+        if((gameTime - enemyLastFireTime) > 2 && enemyBulletList.size() < 5)
+        {
+            enemyList.get(rand.nextInt(4)).fire(enemyBulletList, new Bullet(new Texture("bullet.png")), camera.viewportHeight / 500);
+            fireSound.play(0.5f);
+
+            enemyLastFireTime = gameTime;
+        }
+
         drawGame();
 
     }
@@ -188,8 +200,12 @@ class GameScreen implements Screen {
         {
             tank.loseLife();
 
+            enemyList.clear();
+            spawnEnemies();
+
             if(lifeSprites.size() >= 1) lifeSprites.remove(lifeSprites.size() - 1);
-            //TODO ANIMACIJA? ZVUK?
+
+            Gdx.input.vibrate(200);
             tankCanMove = false;
 
             blockTankTime = gameTime;
@@ -203,6 +219,7 @@ class GameScreen implements Screen {
             for(Enemy enemy : enemyList)
             {
                 enemy.speedUp(1);
+                enemySpeed++;
             }
 
             lastSpeedUp = gameTime;
@@ -224,7 +241,7 @@ class GameScreen implements Screen {
 
     private void removeBulletKillEnemy() {
 
-        for (int i = 0; i < enemyList.size(); i++) //ukloni upucane neprijatelje i metak koji je upucao
+        for (int i = 0; i < enemyList.size(); i++)
         {
 
             if(enemyList.get(i).isShot(bulletList) >= 0) {
@@ -239,9 +256,8 @@ class GameScreen implements Screen {
                 shotSound.play();
 
                 enemiesKilled++;
-                updateScore(50);
+                updateScore(200);
             }
-
 
         }
     }
@@ -267,23 +283,26 @@ class GameScreen implements Screen {
             enemyList.get(enemyList.size()-1).setPosition(enemySpots[i].x, enemySpots[i].y);
             enemyList.get(enemyList.size()-1).setScale(camera.viewportHeight/600);
             enemyList.get(enemyList.size()-1).rotateTo(rand.nextInt(360));
-            enemyList.get(enemyList.size()-1).setSpeed(1);
+            enemyList.get(enemyList.size()-1).setSpeed(enemySpeed);
 
         }
     }
 
     private void handleInput() {
 
+        screenWrapTank();
+
+        //sensorMove();
+
+
         for(int i = 0; i < 2; i ++) {
 
             if (Gdx.input.isTouched(i)) {
-
 
                 Vector3 touch = new Vector3(Gdx.input.getX(i), Gdx.input.getY(i), 0);
                 camera.unproject(touch);
 
                 if (controller.getJoystickSprite().getBoundingRectangle().contains(touch.x, touch.y)) {
-                    screenWrapTank();
                     tank.move(controller.getJoystickAngle(touch));
                 }
 
@@ -297,11 +316,43 @@ class GameScreen implements Screen {
                         //TODO nope
                     }
                 }
+
             }
 
         }
     }
 
+    private void sensorMove() {
+
+     if(Gdx.input.isTouched()) {
+
+                Vector3 touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+                camera.unproject(touch);
+
+                if(!controller.getJoystickSprite().getBoundingRectangle().contains(touch.x, touch.y))
+                {
+                    if(Gdx.input.getAccelerometerX() > 0)
+
+                        tank.moveSensor(Gdx.input.getAccelerometerY() , -Gdx.input.getAccelerometerX() + 5);
+
+                    else if(Gdx.input.getAccelerometerX() < 0)
+
+                        tank.moveSensor(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX());
+                }
+            }
+
+            else
+            {
+                if(Gdx.input.getAccelerometerX() > 0)
+
+                tank.moveSensor(Gdx.input.getAccelerometerY() , -Gdx.input.getAccelerometerX() + 5);
+
+                    else if(Gdx.input.getAccelerometerX() < 0)
+
+                tank.moveSensor(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX() + 8);
+            }
+
+        }
 
     private void moveBullets() {
 
@@ -315,6 +366,18 @@ class GameScreen implements Screen {
                 bulletList.remove(i);
             }
 
+
+        }
+
+        for(int i = 0; i < enemyBulletList.size(); i++)
+        {
+            enemyBulletList.get(i).move(enemyBulletList.get(i).getRotation());
+
+            if(enemyBulletList.get(i).isOutOfScreen(camera))
+            {
+                enemyBulletList.get(i).getSprite().getTexture().dispose();
+                enemyBulletList.remove(i);
+            }
         }
 
     }
@@ -326,6 +389,8 @@ class GameScreen implements Screen {
         game.batch.draw(gamebg, 0, 0, camera.viewportWidth, camera.viewportHeight);
 
         for(Bullet bullet : bulletList) {bullet.draw(game.batch);}
+
+        for(Bullet enemyBullet : enemyBulletList) {enemyBullet.draw(game.batch);}
 
         tank.draw(game.batch);
 

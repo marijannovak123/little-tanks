@@ -38,6 +38,8 @@ public class HighScores extends Activity {
                 scAdapter.removeAt(position);
                 DatabaseHelper.getInstance(HighScores.this).deleteScoreItem(position+1);
 
+                Toast.makeText(HighScores.this, "Score record removed!", Toast.LENGTH_SHORT).show();
+
                 return true;
             }
         });

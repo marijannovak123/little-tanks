@@ -56,7 +56,7 @@ public class ScoreAdapter extends BaseAdapter {
 
         ScoreItem scoreItem = this.scoreList.get(position);
 
-        viewHolder.tvPlayerName.setText(String.format("Player name: %s", scoreItem.getPlayerName()));
+        viewHolder.tvPlayerName.setText(String.format("Player: %s", scoreItem.getPlayerName()));
         viewHolder.tvPlayTime.setText(String.format("Play time: %s", formatTime(scoreItem.getPlayTime())));
         viewHolder.tvScore.setText(String.format("Score: %d", scoreItem.getScore()));
         viewHolder.tvKilled.setText(String.format("Enemies killed: %d", scoreItem.getKilled()));

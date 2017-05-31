@@ -8,5 +8,8 @@
     <string name="score">Score:</string>
     <string name="enemies_killed">Enemies killed:</string>
     <string name="player_name">Player name:</string>
+    <string name="high_scores">HIGH SCORES</string>
+    <string name="title_activity_settings">Settings</string>
+
 
 </resources>

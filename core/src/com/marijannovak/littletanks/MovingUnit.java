@@ -1,11 +1,14 @@
 
 package com.marijannovak.littletanks;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.ArrayList;
 
 /**
  * Created by marij on 27.3.2017..
@@ -14,7 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 class MovingUnit {
 
     protected Sprite unitSprite;
-    protected int unitSpeed = 5;
+    protected int unitSpeed = 10;
 
 
     MovingUnit(Texture texture) {
@@ -36,6 +39,7 @@ class MovingUnit {
         position.y = this.unitSprite.getY();
         return position;
     }
+
 
     public void move(float angle) {
 
@@ -98,5 +102,15 @@ class MovingUnit {
         boundingPolygon.setRotation(this.unitSprite.getRotation());
 
         return boundingPolygon;
+    }
+
+    void fire(ArrayList<Bullet> list, Bullet bullet, float bulletScale)
+    {
+        list.add(bullet);
+        bullet.setPosition(this.unitSprite.getX() + this.unitSprite.getWidth()/2, this.unitSprite.getY() + this.unitSprite.getHeight()/2);
+        bullet.getSprite().setOriginCenter();
+        bullet.rotateTo(this.unitSprite.getRotation());
+        bullet.setScale(bulletScale);
+
     }
 }

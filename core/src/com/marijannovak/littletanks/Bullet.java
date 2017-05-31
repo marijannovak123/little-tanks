@@ -13,7 +13,7 @@ class Bullet extends MovingUnit {
     Bullet(Texture texture)
     {
         super(texture);
-        setSpeed(15);
+        setSpeed(20);
     }
 
     @Override
