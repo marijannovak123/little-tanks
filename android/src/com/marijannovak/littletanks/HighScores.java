@@ -9,6 +9,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class HighScores extends Activity {
 
@@ -26,6 +28,14 @@ public class HighScores extends Activity {
         lvOnline.setVisibility(View.GONE);
 
         scoreList = DatabaseHelper.getInstance(this).getHighScores();
+
+
+        Collections.sort(scoreList, new Comparator<ScoreItem>() {
+            @Override public int compare(ScoreItem item1, ScoreItem item2) {
+                return item2.getScore() - item1.getScore();
+            }
+
+        });
 
         final ScoreAdapter scAdapter = new ScoreAdapter(scoreList);
         lvLocal.setAdapter(scAdapter);

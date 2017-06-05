@@ -52,7 +52,6 @@ public class MenuActivity extends Activity implements View.OnClickListener{
 
                     if(!user.isEmailVerified())
                     {
-                        stringBuilder.append(" (not verified)");
                         user.sendEmailVerification();
                     }
 
@@ -128,7 +127,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
 
             case R.id.authStatus:
 
-                if(authStatus.getText().equals("Not logged in"))
+                if(authStatus.getText().equals("Login/Register"))
                     registerLoginDialog();
                 break;
 

@@ -7,9 +7,9 @@ class LittleTanks extends Game {
 
 	SpriteBatch batch;
 	GameOverCallback gameOverCallback;
-	private String playerName;
-	private int difficulty;
-	private boolean sound, sensor;
+	String playerName;
+	int difficulty;
+	boolean sound, sensor;
 
 	public LittleTanks(String name, int diff, boolean snd, boolean snsr)
 	{
