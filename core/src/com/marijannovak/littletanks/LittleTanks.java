@@ -1,30 +1,23 @@
 package com.marijannovak.littletanks;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
-
-import java.util.ArrayList;
-
-import javax.security.auth.callback.Callback;
-
-import jdk.nashorn.internal.codegen.CompilerConstants;
 
 class LittleTanks extends Game {
 
 	SpriteBatch batch;
 	GameOverCallback gameOverCallback;
-	String playerName;
+	private String playerName;
+	private int difficulty;
+	private boolean sound, sensor;
 
-	public LittleTanks(String name)
+	public LittleTanks(String name, int diff, boolean snd, boolean snsr)
 	{
 		this.playerName = name;
+		this.difficulty = diff;
+		this.sound = snd;
+		this. sensor = snsr;
+
 	}
 
 	@Override
@@ -45,6 +38,7 @@ class LittleTanks extends Game {
 	}
 
 	public interface GameOverCallback{
+
 		public void gameOver(String player, int score, int time, int killed);
 	}
 

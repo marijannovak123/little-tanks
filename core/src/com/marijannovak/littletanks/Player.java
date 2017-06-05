@@ -25,13 +25,12 @@ class Player extends MovingUnit {
     }
 
 
-
     public void moveSensor(float x, float y)
     {
 
         //Gdx.app.log("LOGIRANJE", " " + (Math.toDegrees(Math.atan2(y, x)) -90));
 
-        if(this.unitSprite.getRotation() != Math.toDegrees(Math.atan2(x, y)))
+        if(this.unitSprite.getRotation() != Math.toDegrees(Math.atan2(-x, y)))
 
             this.unitSprite.setRotation( (float) Math.toDegrees(Math.atan2(-x, y)));
 
@@ -53,7 +52,9 @@ class Player extends MovingUnit {
 
         for(int i = 0; i < enemyList.size(); i++)
         {
-            if(Intersector.overlapConvexPolygons(this.getBoundingPolygon(), enemyList.get(i).getBoundingPolygon())) check = true;
+            if(Intersector.overlapConvexPolygons(this.getBoundingPolygon(), enemyList.get(i).getBoundingPolygon()))
+
+                    check = true;
         }
 
         return check;

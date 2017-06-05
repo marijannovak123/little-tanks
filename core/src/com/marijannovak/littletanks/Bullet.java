@@ -26,8 +26,7 @@ class Bullet extends MovingUnit {
 
     public boolean isOutOfScreen(Camera camera) {
 
-        if(this.unitSprite.getX() > camera.viewportWidth || this.unitSprite.getX() < 0
-                || this.unitSprite.getY() > camera.viewportHeight || this.unitSprite.getY() < 0) return true;
-        else return false;
+        return this.unitSprite.getX() > camera.viewportWidth || this.unitSprite.getX() < 0
+                || this.unitSprite.getY() > camera.viewportHeight || this.unitSprite.getY() < 0;
     }
 }

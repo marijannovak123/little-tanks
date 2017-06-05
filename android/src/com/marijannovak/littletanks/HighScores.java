@@ -14,7 +14,7 @@ public class HighScores extends Activity {
 
     ListView lvLocal, lvOnline;
     ArrayList<ScoreItem> scoreList;
-
+//TODO BACKGROUND ONLINE BAZA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

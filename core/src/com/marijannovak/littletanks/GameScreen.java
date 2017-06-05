@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -20,6 +19,7 @@ import java.util.Random;
  * Created by marij on 27.3.2017..
  */
 
+//TODO ENEMY BULLET PLAYER COLLISION
 class GameScreen implements Screen {
 
     private final LittleTanks game;
@@ -145,12 +145,12 @@ class GameScreen implements Screen {
 
         //Gdx.app.log(TAG, "Accelerometer X: " + Gdx.input.getAccelerometerX());
         //Gdx.app.log(TAG, "Accelerometer Y: " + Gdx.input.getAccelerometerY());
-       //Gdx.app.log(TAG, "Accelerometer Z: " + Gdx.input.getAccelerometerZ());
+        //Gdx.app.log(TAG, "Accelerometer Z: " + Gdx.input.getAccelerometerZ());
 
         if(tank.getLives() == 0)
-        {
+
             game.gameOverCallback.gameOver(game.playerName, score, (int) gameTime, enemiesKilled);
-        }
+
 
         gameTime += delta;
 
@@ -161,9 +161,8 @@ class GameScreen implements Screen {
         checkTankEnemyCollision();
 
         if(!tankCanMove && (gameTime - blockTankTime) > 0.5)
-        {
+
             tankCanMove = true;
-        }
 
         removeBulletKillEnemy();
 
@@ -171,11 +170,25 @@ class GameScreen implements Screen {
 
         moveEnemies();
 
-        for(int i = 0; i < numberOfEnemies; i++) if(enemyList.size() == numberOfEnemies) spotTaken[i] = false;
+        for(int i = 0; i < numberOfEnemies; i++)
+
+            if(enemyList.size() == numberOfEnemies)
+
+                spotTaken[i] = false;
 
         moveBullets();
 
-        if(tankCanMove) handleInput();
+        if(tankCanMove)
+
+            handleInput();
+
+        enemyShoot();
+
+        drawGame();
+
+    }
+
+    private void enemyShoot() {
 
         if((gameTime - enemyLastFireTime) > 2 && enemyBulletList.size() < 5)
         {
@@ -184,9 +197,6 @@ class GameScreen implements Screen {
 
             enemyLastFireTime = gameTime;
         }
-
-        drawGame();
-
     }
 
     private void updateScore(float addedScore) {
@@ -232,10 +242,21 @@ class GameScreen implements Screen {
         {
             enemy.move(enemy.getRotation());
 
-            if(enemy.getPosition().x > camera.viewportWidth)enemy.getSprite().setPosition(0, enemy.getPosition().y);
-            if(enemy.getPosition().x < -enemy.getSprite().getWidth()) enemy.getSprite().setPosition(camera.viewportWidth, enemy.getPosition().y);
-            if(enemy.getPosition().y > camera.viewportHeight) enemy.getSprite().setPosition(enemy.getPosition().x, 0);
-            if(enemy.getPosition().y < -enemy.getSprite().getHeight()) enemy.getSprite().setPosition(enemy.getPosition().x, camera.viewportHeight);
+            if(enemy.getPosition().x > camera.viewportWidth)
+
+                enemy.getSprite().setPosition(0, enemy.getPosition().y);
+
+            if(enemy.getPosition().x < -enemy.getSprite().getWidth())
+
+                enemy.getSprite().setPosition(camera.viewportWidth, enemy.getPosition().y);
+
+            if(enemy.getPosition().y > camera.viewportHeight)
+
+                enemy.getSprite().setPosition(enemy.getPosition().x, 0);
+
+            if(enemy.getPosition().y < -enemy.getSprite().getHeight())
+
+                enemy.getSprite().setPosition(enemy.getPosition().x, camera.viewportHeight);
         }
     }
 
@@ -292,8 +313,7 @@ class GameScreen implements Screen {
 
         screenWrapTank();
 
-        //sensorMove();
-
+        sensorMove();
 
         for(int i = 0; i < 2; i ++) {
 
@@ -347,7 +367,7 @@ class GameScreen implements Screen {
 
                 tank.moveSensor(Gdx.input.getAccelerometerY() , -Gdx.input.getAccelerometerX() + 5);
 
-                    else if(Gdx.input.getAccelerometerX() < 0)
+                else if(Gdx.input.getAccelerometerX() < 0)
 
                 tank.moveSensor(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX() + 8);
             }
@@ -398,7 +418,7 @@ class GameScreen implements Screen {
 
         for (Sprite lifeSprite : lifeSprites) lifeSprite.draw(game.batch);
 
-        font.draw(game.batch, "Score: " + String.valueOf(this.score),0, camera.viewportHeight);
+        font.draw(game.batch, "Score: " + String.valueOf(this.score), 0, camera.viewportHeight);
 
         controller.drawControls(game.batch);
 
@@ -415,17 +435,30 @@ class GameScreen implements Screen {
         shapeRenderer.setColor(Color.BLUE);
         shapeRenderer.polygon(tank.getBoundingPolygon().getTransformedVertices());
 
-        for (Enemy enemy : enemyList) {
-            shapeRenderer.polygon(enemy.getBoundingPolygon().getTransformedVertices());  }
+        for (Enemy enemy : enemyList)
+
+            shapeRenderer.polygon(enemy.getBoundingPolygon().getTransformedVertices());
 
         shapeRenderer.end();
     }
 
     private void screenWrapTank() {
-        if(tank.getPosition().x > camera.viewportWidth) tank.getSprite().setPosition(0, tank.getPosition().y);
-        if(tank.getPosition().x < -tank.getSprite().getWidth()) tank.getSprite().setPosition(camera.viewportWidth, tank.getPosition().y);
-        if(tank.getPosition().y > camera.viewportHeight) tank.getSprite().setPosition(tank.getPosition().x, 0);
-        if(tank.getPosition().y < -tank.getSprite().getHeight()) tank.getSprite().setPosition(tank.getPosition().x, camera.viewportHeight);
+
+        if(tank.getPosition().x > camera.viewportWidth)
+
+            tank.getSprite().setPosition(0, tank.getPosition().y);
+
+        if(tank.getPosition().x < -tank.getSprite().getWidth())
+
+            tank.getSprite().setPosition(camera.viewportWidth, tank.getPosition().y);
+
+        if(tank.getPosition().y > camera.viewportHeight)
+
+            tank.getSprite().setPosition(tank.getPosition().x, 0);
+
+        if(tank.getPosition().y < -tank.getSprite().getHeight())
+
+            tank.getSprite().setPosition(tank.getPosition().x, camera.viewportHeight);
     }
 
     @Override
@@ -450,7 +483,7 @@ class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        //TODO DISPOSE
     }
 
     @Override

@@ -1,28 +1,33 @@
 package com.marijannovak.littletanks;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
-import static java.security.AccessController.getContext;
+import java.util.ArrayList;
 
 /**
  * Created by marij on 31.5.2017..
  */
 
 public class SettingsAdapter extends BaseAdapter {
+
+    ArrayList<SettingItem> settings;
+
+    public SettingsAdapter(ArrayList<SettingItem> settingItems) {
+        this.settings = settingItems;
+    }
+
     @Override
     public int getCount() {
-        return 4;
+        return this.settings.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return this.settings.get(position);
     }
 
     @Override
@@ -33,91 +38,82 @@ public class SettingsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-/*
-        int viewType = this.getItemViewType(position);
+        if (settings.get(position).getHasCheck()) {
 
-        switch(viewType)
-        {
-            case TYPE1:
+            CheckViewHolder checkViewHolder;
 
-                Type1Holder holder1;
+            if (convertView == null) {
 
-                View v = convertView;
-                if (v == null) {
-                    LayoutInflater vi = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    v = vi.inflate(R.layout.layout_mylistlist_item_type_1, parent, false);
+                LayoutInflater vi = LayoutInflater.from(parent.getContext());
+                convertView = vi.inflate(R.layout.check_setting, parent, false);
 
-                    holder1 = new Type1Holder ();
-                    holder1.text = (TextView) v.findViewById(R.id.mylist_itemname);
-                    v.setTag(holder1);
-                }
-                else {
-                    holder1 = (Type1Holder)v.getTag();
-                }
+                checkViewHolder = new CheckViewHolder(convertView);
+                checkViewHolder.settingName = (TextView) convertView.findViewById(R.id.settingName);
+                checkViewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.checkBox);
+                convertView.setTag(checkViewHolder);
 
-                MyListItem myItem = m_items.get(position);
-
-                // set up the list item
-                if (myItem != null) {
-                    // set item text
-                    if (holder1.text != null) {
-                        holder1.text.setText(myItem.getItemName());
-                    }
-                }
-
-                // return the created view
-                return v;
+            } else
+                checkViewHolder = (CheckViewHolder) convertView.getTag();
 
 
-            case TYPE2:
-                Type2Holder holder2;
+            SettingItem checkItem = this.settings.get(position);
 
-                View v = convertView;
-                if (v == null) {
-                    LayoutInflater vi = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    v = vi.inflate(R.layout.layout_mylistlist_item_type_2, parent, false);
+            if (checkViewHolder.settingName != null) {
+                checkViewHolder.settingName.setText(checkItem.getSettingName());
+            }
 
-                    holder2 = new Type2Holder ();
-                    holder2.text = (TextView) v.findViewById(R.id.mylist_itemname);
-                    holder2.icon = (ImageView) v.findViewById(R.id.mylist_itemicon);
-                    v.setTag(holder1);
-                }
-                else {
-                    holder2 = (Type2Holder)v.getTag();
-                }
-
-                MyListItem myItem = m_items.get(position);
-
-                // set up the list item
-                if (myItem != null) {
-                    // set item text
-                    if (holder2.text != null) {
-                        holder2.text.setText(myItem.getItemName());
-                    }
-
-                    if(holder2.icon != null)
-                        holder2.icon.setDrawable(R.drawable.icon1);
-                }
+            if (checkViewHolder.checkBox != null && checkItem.getHasCheck()) {
+                checkViewHolder.checkBox.setChecked(checkItem.getChecked());
+            }
 
 
-                // return the created view
-                return v;
+        } else if (!settings.get(position).getHasCheck()) {
 
+            ViewHolder viewHolder;
 
-            default:
-                //Throw exception, unknown data type
-        }*/
+            if (convertView == null) {
+                LayoutInflater vi = LayoutInflater.from(parent.getContext());
+                convertView = vi.inflate(R.layout.normal_setting, parent, false);
+
+                viewHolder = new ViewHolder(convertView);
+                viewHolder.settingName = (TextView) convertView.findViewById(R.id.settingName2);
+                convertView.setTag(viewHolder);
+            } else
+                viewHolder = (ViewHolder) convertView.getTag();
+
+            SettingItem item = this.settings.get(position);
+
+            if (viewHolder.settingName != null) {
+                viewHolder.settingName.setText(item.getSettingName());
+            }
+
+        }
 
         return convertView;
+
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+
+    private static class CheckViewHolder {
+
+        TextView settingName;
+        CheckBox checkBox;
+
+        public CheckViewHolder(View checkView) {
+            settingName = (TextView) checkView.findViewById(R.id.settingName);
+            checkBox = (CheckBox) checkView.findViewById(R.id.checkBox);
+        }
     }
 
-    @Override
-    public int getViewTypeCount() {
-        return super.getViewTypeCount();
+    private static class ViewHolder {
+
+        TextView settingName;
+
+        public ViewHolder(View view) {
+            settingName = (TextView) view.findViewById(R.id.settingName2);
+        }
     }
+
 }
+
+

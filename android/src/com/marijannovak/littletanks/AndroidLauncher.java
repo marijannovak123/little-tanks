@@ -2,9 +2,7 @@ package com.marijannovak.littletanks;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.telecom.Call;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.marijannovak.littletanks.LittleTanks;
@@ -15,7 +13,6 @@ public class AndroidLauncher extends AndroidApplication implements LittleTanks.G
 	private static final String KEY_PLAYER = "key_player";
 	private static final String KEY_TIME = "key_time";
 	private static final String KEY_KILLED = "key_killed";
-
 
 	LittleTanks game;
 
@@ -29,13 +26,16 @@ public class AndroidLauncher extends AndroidApplication implements LittleTanks.G
 
 		Intent startingIntent = this.getIntent();
 
+		//TODO dodat i ostale atribute
+
 		if(startingIntent.hasExtra(KEY_PLAYER))
 		{
-			game = new LittleTanks(startingIntent.getStringExtra(KEY_PLAYER));
+			game = new LittleTanks(startingIntent.getStringExtra(KEY_PLAYER), 1, true, true);
 		}
+
 		else
 		{
-			game = new LittleTanks("Unknown");
+			game = new LittleTanks("Unknown", 1, true, true);
 		}
 
 		game.setGameOverCallback(this);

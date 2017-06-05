@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "189456809122",
+    "firebase_url": "https://littletanks-87a93.firebaseio.com",
+    "project_id": "littletanks-87a93",
+    "storage_bucket": "littletanks-87a93.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:189456809122:android:60807229a16b95af",
+        "android_client_info": {
+          "package_name": "com.marijannovak.littletanks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "189456809122-lidiupscreh8m1er8i649oa6kg9s71pj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.marijannovak.littletanks",
+            "certificate_hash": "33c0c22c8e26df1f110f49c4fc0495cfa1e3e035"
+          }
+        },
+        {
+          "client_id": "189456809122-uf3kqe2un3lb0n5h8m4ou8pcm2c7p2qp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWeR5MShjucMZkMZDC95Gu8586jfpwyac"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "189456809122-uf3kqe2un3lb0n5h8m4ou8pcm2c7p2qp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

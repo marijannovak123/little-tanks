@@ -29,10 +29,9 @@ class Controls {
     {
         float angle = (float) Math.toDegrees(Math.atan2(touchPoint.y - this.joystickCenter.y, touchPoint.x - this.joystickCenter.x));
 
+        if(angle < 0)
 
-        if(angle < 0){
             angle += 360;
-        }
 
         return angle;
     }
@@ -64,11 +63,6 @@ class Controls {
         this.joystickSprite.setPosition(x, y);
     }
 
-    public Vector2 getJoystickPos()
-    {
-        return this.joystickCenter;
-    }
-
     public Sprite getFireSprite()
     {
         return this.fireSprite;
@@ -77,11 +71,6 @@ class Controls {
     public void setFirePos(float x, float y)
     {
         this.fireSprite.setPosition(x, y);
-    }
-
-    public Vector2 getFirePos()
-    {
-        return new Vector2(fireSprite.getX(), fireSprite.getY());
     }
 
     public void setJoystickCenter(Vector2 joystickCenter) {
