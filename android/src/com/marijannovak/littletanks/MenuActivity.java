@@ -45,17 +45,9 @@ public class MenuActivity extends Activity implements View.OnClickListener{
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
 
-                    loginName = user.getEmail();
+                    loginName = getUsernameFromEmail(user.getEmail());
 
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append("Logged in: \n").append(user.getEmail());
-
-                    if(!user.isEmailVerified())
-                    {
-                        user.sendEmailVerification();
-                    }
-
-                    authStatus.setText(stringBuilder.toString());
+                    authStatus.setText("Logged in: " + loginName);
 
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getEmail());
                 } else {
@@ -160,5 +152,20 @@ public class MenuActivity extends Activity implements View.OnClickListener{
                     }
                 })
                 .show();
+    }
+
+    private String getUsernameFromEmail(String email)
+    {
+        int i = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        while(email.charAt(i) != '@')
+        {
+            stringBuilder.append(email.charAt(i));
+            i++;
+        }
+
+        return stringBuilder.toString();
+
     }
 }

@@ -16,10 +16,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegisterActivity extends Activity {
 
-    EditText etEmail, etPassword, etPasswordCheck;
+    EditText etUsername, etEmail, etPassword, etPasswordCheck;
     Button btnSignUp;
 
     private static final String KEY_RL = "key_rl";
@@ -28,6 +29,7 @@ public class RegisterActivity extends Activity {
     private int rlStatus;
 
     private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,20 @@ public class RegisterActivity extends Activity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getEmail());
+                } else {
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+
+            }
+        };
+
         Intent startingIntent = this.getIntent();
 
         if(startingIntent.hasExtra(KEY_RL))
@@ -43,6 +59,7 @@ public class RegisterActivity extends Activity {
            rlStatus = startingIntent.getIntExtra(KEY_RL, 1);
         }
 
+        etUsername = (EditText) findViewById(R.id.etUsername);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etPasswordCheck = (EditText) findViewById(R.id.etPasswordCheck);
@@ -66,6 +83,7 @@ public class RegisterActivity extends Activity {
         {
             btnSignUp.setText(R.string.log_in);
             etPasswordCheck.setVisibility(View.GONE);
+            etUsername.setVisibility(View.GONE);
 
             btnSignUp.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -78,9 +96,25 @@ public class RegisterActivity extends Activity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
     private void createNewUser(final String email, final String password) {
 
-        if(etEmail.getText().toString().isEmpty()) etEmail.setError("You must enter an e-mail address!");
+        if(etUsername.getText().toString().isEmpty()) etUsername.setError("You must enter username");
+
+        else if(etEmail.getText().toString().isEmpty()) etEmail.setError("You must enter an e-mail address!");
 
         else if(!isEmailValid(etEmail.getText().toString())) etEmail.setError("You haven't entered a valid e-mail address!");
 
@@ -97,7 +131,14 @@ public class RegisterActivity extends Activity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
                             if (!task.isSuccessful()) {
+
                                 Toast.makeText(RegisterActivity.this, "Sign up failed!", Toast.LENGTH_SHORT).show();
+                            }
+
+                            else
+                            {
+
+
                             }
 
                         }
