@@ -9,12 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class GameOver extends Activity implements View.OnClickListener {
-
-    private static final String KEY_SCORE = "key_score";
-    private static final String KEY_PLAYER = "key_player";
-    private static final String KEY_TIME = "key_time";
-    private static final String KEY_KILLED = "key_killed";
-
+    
     private String playerName;
     private int score, time, killed;
 
@@ -38,24 +33,24 @@ public class GameOver extends Activity implements View.OnClickListener {
 
         Intent startingIntent = this.getIntent();
 
-        if(startingIntent.hasExtra(KEY_PLAYER))
+        if(startingIntent.hasExtra(Constants.KEY_PLAYER))
         {
-            playerName = startingIntent.getStringExtra(KEY_PLAYER);
+            playerName = startingIntent.getStringExtra(Constants.KEY_PLAYER);
         }
 
-        if(startingIntent.hasExtra(KEY_SCORE))
+        if(startingIntent.hasExtra(Constants.KEY_SCORE))
         {
-            score = startingIntent.getIntExtra(KEY_SCORE, 0);
+            score = startingIntent.getIntExtra(Constants.KEY_SCORE, 0);
         }
 
-        if(startingIntent.hasExtra(KEY_TIME))
+        if(startingIntent.hasExtra(Constants.KEY_TIME))
         {
-            time = startingIntent.getIntExtra(KEY_TIME, 0);
+            time = startingIntent.getIntExtra(Constants.KEY_TIME, 0);
         }
 
-        if(startingIntent.hasExtra(KEY_KILLED))
+        if(startingIntent.hasExtra(Constants.KEY_KILLED))
         {
-            killed = startingIntent.getIntExtra(KEY_KILLED, 0);
+            killed = startingIntent.getIntExtra(Constants.KEY_KILLED, 0);
         }
 
         DatabaseHelper.getInstance(this).addScore(new ScoreItem(playerName, score, time, killed));

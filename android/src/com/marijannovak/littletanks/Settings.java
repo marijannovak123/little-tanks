@@ -1,7 +1,11 @@
 package com.marijannovak.littletanks;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -19,11 +23,15 @@ import java.util.List;
 public class Settings extends Activity {
 
     private static final String TAG = "Settings Debug";
-    public static final String KEY_RL = "key_rl";
+
+    private int diff;
+
+    SharedPreferences sharedPreferences;
 
     //TODO BACKGOURND
     ListView lvSettings;
     ArrayList<SettingItem> settingItems;
+    SettingsAdapter settingsAdapter;
 
     FirebaseAuth mAuth;
 
@@ -32,16 +40,16 @@ public class Settings extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        settingItems = new ArrayList<>();
+        fillSettingsList();
 
-        settingItems.add(new SettingItem("Sound", true));
-        settingItems.add(new SettingItem("Sensor move", false));
-        settingItems.add(new SettingItem("Difficulty"));
-        settingItems.add(new SettingItem("Login/Logout"));
-        settingItems.add(new SettingItem("About"));
+        setUpLV();
+
+    }
+
+    private void setUpLV() {
 
         lvSettings = (ListView) findViewById(R.id.lvSettings);
-        SettingsAdapter settingsAdapter = new SettingsAdapter(settingItems);
+        settingsAdapter = new SettingsAdapter(settingItems);
         lvSettings.setAdapter(settingsAdapter);
 
         lvSettings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -50,6 +58,25 @@ public class Settings extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position)
                 {
+                    //za 0 i 1 implementirano u adapteru zbog pristupa checkboxu
+
+                    case 2:
+
+                        if(diff <= 2) diff++;
+                        else diff = 1;
+
+                        settingsAdapter.updateDiff(diff);
+
+                        sharedPreferences = getSharedPreferences(Constants.MyPREFERENCES, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                        editor.putInt(Constants.Difficulty, diff);
+
+                        editor.commit();
+
+                        break;
+
+
                     case 3:
 
                         mAuth = FirebaseAuth.getInstance();
@@ -64,25 +91,92 @@ public class Settings extends Activity {
                         else
                         {
                             Intent registerIntent = new Intent(Settings.this, RegisterActivity.class);
-                            registerIntent.putExtra(KEY_RL, 1);
+                            registerIntent.putExtra(Constants.KEY_RL, 1);
                             startActivity(registerIntent);
                             finish();
                         }
 
+                        break;
+
+                    case 4:
+
+                        displayAbout();
+                        break;
 
                 }
             }
         });
     }
 
+    private void fillSettingsList() {
+
+        settingItems = new ArrayList<>();
+
+        sharedPreferences = getSharedPreferences(Constants.MyPREFERENCES, Context.MODE_PRIVATE);
+
+
+        settingItems.add(new SettingItem("Sound", sharedPreferences.getBoolean(Constants.Sound, true)));
+        settingItems.add(new SettingItem("Sensor move", sharedPreferences.getBoolean(Constants.Sensors, false)));
+
+        diff = sharedPreferences.getInt(Constants.Difficulty, 1);
+
+        switch (diff)
+        {
+            case 1:
+                settingItems.add(new SettingItem("Difficulty: Easy"));
+
+                break;
+
+            case 2:
+                settingItems.add(new SettingItem("Difficulty: Medium"));
+
+                break;
+
+            case 3:
+                settingItems.add(new SettingItem("Difficulty: Hard"));
+
+                break;
+        }
+
+        settingItems.add(new SettingItem("Login/Logout"));
+        settingItems.add(new SettingItem("About"));
+
+    }
+
+    private void displayAbout() {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle("About")
+
+                .setMessage("\nMarijan Novak\n\n1.DKB\n\nRazvoj mobilnih aplikacija\n\nFERIT\n\n2017.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
+        savePrefs();
 
         Intent backIntent = new Intent(this, MenuActivity.class);
         startActivity(backIntent);
         finish();
     }
 
+    private void savePrefs() {
+
+        sharedPreferences = getSharedPreferences(Constants.MyPREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean(Constants.Sensors, settingsAdapter.getSensorStatus());
+        editor.putBoolean(Constants.Sound, settingsAdapter.getSoundStatus());
+        editor.commit();
+    }
 
 }

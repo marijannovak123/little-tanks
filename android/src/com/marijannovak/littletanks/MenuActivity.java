@@ -2,8 +2,10 @@ package com.marijannovak.littletanks;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,9 +23,13 @@ import com.google.firebase.auth.FirebaseUser;
 public class MenuActivity extends Activity implements View.OnClickListener{
 
     private static final String TAG = "MainActivity Debug";
-    private static final String KEY_PLAYER = "key_player";
-    private static final String KEY_RL = "key_rl";
+
+    SharedPreferences sharedPreferences;
+
     private String loginName;
+    private boolean soundCheck, sensorCheck;
+    private int diff;
+
     private Button playButton, scoreButton;
     private ImageButton settingsButton;
     private TextView authStatus;
@@ -64,11 +70,16 @@ public class MenuActivity extends Activity implements View.OnClickListener{
         settingsButton = (ImageButton) findViewById(R.id.btnSettings);
         authStatus = (TextView) findViewById(R.id.authStatus);
 
-
         playButton.setOnClickListener(this);
         scoreButton.setOnClickListener(this);
         settingsButton.setOnClickListener(this);
         authStatus.setOnClickListener(this);
+
+        sharedPreferences = getSharedPreferences(Constants.MyPREFERENCES, Context.MODE_PRIVATE);
+
+        soundCheck = sharedPreferences.getBoolean(Constants.Sound, false);
+        sensorCheck = sharedPreferences.getBoolean(Constants.Sensors, false);
+        diff = sharedPreferences.getInt(Constants.Difficulty, 1);
     }
 
     @Override
@@ -87,7 +98,6 @@ public class MenuActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    //TODO database
     @Override
     public void onClick(View v) {
         switch (v.getId())
@@ -95,7 +105,10 @@ public class MenuActivity extends Activity implements View.OnClickListener{
             case R.id.playBtn:
 
                 Intent playIntent = new Intent(this, AndroidLauncher.class);
-                playIntent.putExtra(KEY_PLAYER, loginName);
+                playIntent.putExtra(Constants.KEY_PLAYER, loginName);
+                playIntent.putExtra(Constants.Sound, soundCheck);
+                playIntent.putExtra(Constants.Sensors, sensorCheck);
+                playIntent.putExtra(Constants.Difficulty, diff);
                 startActivity(playIntent);
                 finish();
 
@@ -121,6 +134,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
 
                 if(authStatus.getText().equals("Login/Register"))
                     registerLoginDialog();
+
                 break;
 
         }
@@ -133,11 +147,11 @@ public class MenuActivity extends Activity implements View.OnClickListener{
         dialogBuilder.setTitle("Register/Login")
 
                 .setMessage("Would you like to log in or register?")
-                .setNeutralButton("Register", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Register", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent registerIntent = new Intent(MenuActivity.this, RegisterActivity.class);
-                        registerIntent.putExtra(KEY_RL, 0);
+                        registerIntent.putExtra(Constants.KEY_RL, 0);
                         startActivity(registerIntent);
                         finish();
                     }
@@ -146,7 +160,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent registerIntent = new Intent(MenuActivity.this, RegisterActivity.class);
-                        registerIntent.putExtra(KEY_RL, 1);
+                        registerIntent.putExtra(Constants.KEY_RL, 1);
                         startActivity(registerIntent);
                         finish();
                     }

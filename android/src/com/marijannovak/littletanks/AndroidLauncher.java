@@ -2,6 +2,7 @@ package com.marijannovak.littletanks;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -9,12 +10,15 @@ import com.marijannovak.littletanks.LittleTanks;
 
 public class AndroidLauncher extends AndroidApplication implements LittleTanks.GameOverCallback{
 
-	private static final String KEY_SCORE = "key_score";
-	private static final String KEY_PLAYER = "key_player";
-	private static final String KEY_TIME = "key_time";
-	private static final String KEY_KILLED = "key_killed";
+
+
+
+    private boolean soundCheck, sensorCheck;
+    private int diff = 1;
+    private String name;
 
 	LittleTanks game;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,17 +30,30 @@ public class AndroidLauncher extends AndroidApplication implements LittleTanks.G
 
 		Intent startingIntent = this.getIntent();
 
-		//TODO dodat i ostale atribute
-
-		if(startingIntent.hasExtra(KEY_PLAYER))
+		if(startingIntent.hasExtra(Constants.KEY_PLAYER))
 		{
-			game = new LittleTanks(startingIntent.getStringExtra(KEY_PLAYER), 1, true, true);
+			name = startingIntent.getStringExtra(Constants.KEY_PLAYER);
 		}
 
-		else
-		{
-			game = new LittleTanks("Unknown", 1, true, true);
-		}
+		if(startingIntent.hasExtra(Constants.Sound))
+        {
+            soundCheck = startingIntent.getBooleanExtra(Constants.Sound, false);
+        }
+
+        if(startingIntent.hasExtra(Constants.Sensors))
+        {
+            sensorCheck = startingIntent.getBooleanExtra(Constants.Sensors, false);
+        }
+
+        if(startingIntent.hasExtra(Constants.Difficulty))
+        {
+            diff = startingIntent.getIntExtra(Constants.Difficulty, 1);
+        }
+
+        if(name == null) name = "Unknown";
+
+		Log.d("Parametar log launcher", "name: " + name + " diff: "+ diff + " sound: " + soundCheck + " sensors: "+ sensorCheck);
+		game = new LittleTanks(name, diff, soundCheck, sensorCheck);
 
 		game.setGameOverCallback(this);
 
@@ -48,10 +65,10 @@ public class AndroidLauncher extends AndroidApplication implements LittleTanks.G
 	{
 		Intent gameOverIntent = new Intent(this, GameOver.class);
 
-		gameOverIntent.putExtra(KEY_PLAYER, player);
-		gameOverIntent.putExtra(KEY_SCORE, score);
-		gameOverIntent.putExtra(KEY_TIME, time);
-		gameOverIntent.putExtra(KEY_KILLED, killed);
+		gameOverIntent.putExtra(Constants.KEY_PLAYER, player);
+		gameOverIntent.putExtra(Constants.KEY_SCORE, score);
+		gameOverIntent.putExtra(Constants.KEY_TIME, time);
+		gameOverIntent.putExtra(Constants.KEY_KILLED, killed);
 
 		startActivity(gameOverIntent);
 	}

@@ -20,10 +20,9 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegisterActivity extends Activity {
 
-    EditText etUsername, etEmail, etPassword, etPasswordCheck;
+    EditText etEmail, etPassword, etPasswordCheck;
     Button btnSignUp;
 
-    private static final String KEY_RL = "key_rl";
     private static final String TAG = "RegisterActivity Debug";
 
     private int rlStatus;
@@ -54,12 +53,11 @@ public class RegisterActivity extends Activity {
 
         Intent startingIntent = this.getIntent();
 
-        if(startingIntent.hasExtra(KEY_RL))
+        if(startingIntent.hasExtra(Constants.KEY_RL))
         {
-           rlStatus = startingIntent.getIntExtra(KEY_RL, 1);
+           rlStatus = startingIntent.getIntExtra(Constants.KEY_RL, 1);
         }
 
-        etUsername = (EditText) findViewById(R.id.etUsername);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etPasswordCheck = (EditText) findViewById(R.id.etPasswordCheck);
@@ -83,7 +81,6 @@ public class RegisterActivity extends Activity {
         {
             btnSignUp.setText(R.string.log_in);
             etPasswordCheck.setVisibility(View.GONE);
-            etUsername.setVisibility(View.GONE);
 
             btnSignUp.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -112,9 +109,8 @@ public class RegisterActivity extends Activity {
 
     private void createNewUser(final String email, final String password) {
 
-        if(etUsername.getText().toString().isEmpty()) etUsername.setError("You must enter username");
 
-        else if(etEmail.getText().toString().isEmpty()) etEmail.setError("You must enter an e-mail address!");
+        if(etEmail.getText().toString().isEmpty()) etEmail.setError("You must enter an e-mail address!");
 
         else if(!isEmailValid(etEmail.getText().toString())) etEmail.setError("You haven't entered a valid e-mail address!");
 
@@ -131,14 +127,13 @@ public class RegisterActivity extends Activity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
                             if (!task.isSuccessful()) {
-
                                 Toast.makeText(RegisterActivity.this, "Sign up failed!", Toast.LENGTH_SHORT).show();
                             }
 
                             else
                             {
-
-
+                                mAuth.getCurrentUser().sendEmailVerification();
+                                Toast.makeText(RegisterActivity.this, mAuth.getCurrentUser().getEmail()+ " succesfully signed up!", Toast.LENGTH_SHORT).show();
                             }
 
                         }

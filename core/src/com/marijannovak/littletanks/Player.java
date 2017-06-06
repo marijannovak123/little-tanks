@@ -2,10 +2,7 @@ package com.marijannovak.littletanks;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
 
@@ -34,7 +31,6 @@ class Player extends MovingUnit {
 
             this.unitSprite.setRotation( (float) Math.toDegrees(Math.atan2(-x, y)));
 
-
         this.unitSprite.translate(x*2,y*2);
     }
 
@@ -45,14 +41,19 @@ class Player extends MovingUnit {
         this.unitSprite.setRotation(0);
     }
 
+    public int getLives()
+    {
+        return this.playerLives;
+    }
 
-    public boolean didCollide(ArrayList<Enemy> enemyList) {
+
+    public boolean collidedEnemy(ArrayList<Enemy> enemyList) {
 
         boolean check = false;
 
         for(int i = 0; i < enemyList.size(); i++)
         {
-            if(Intersector.overlapConvexPolygons(this.getBoundingPolygon(), enemyList.get(i).getBoundingPolygon()))
+            if(Intersector.overlapConvexPolygons(this.getCollisionBox(), enemyList.get(i).getCollisionBox()))
 
                     check = true;
         }
@@ -60,8 +61,18 @@ class Player extends MovingUnit {
         return check;
     }
 
-    public int getLives()
-    {
-        return this.playerLives;
+
+    public boolean collidedEnemyBullet(ArrayList<Bullet> enemyBulletList) {
+
+        boolean check = false;
+
+        for(int i = 0; i < enemyBulletList.size(); i++)
+        {
+            if(Intersector.overlapConvexPolygons(this.getCollisionBox(), enemyBulletList.get(i).getCollisionBox()))
+
+                check = true;
+        }
+
+        return check;
     }
 }

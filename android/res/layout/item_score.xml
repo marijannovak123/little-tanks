@@ -12,7 +12,9 @@
         android:layout_marginBottom="10dp"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:shadowColor="#A80505"
+        android:shadowRadius="5"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -29,7 +31,9 @@
             android:text="@string/play_time"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:shadowColor="#A80505"
+            android:shadowRadius="5"/>
 
         <TextView
             android:id="@+id/tvScore"
@@ -40,6 +44,8 @@
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
             android:layout_marginBottom="10dp"
+            android:shadowColor="#A80505"
+            android:shadowRadius="5"
             />
 
         <TextView
@@ -52,7 +58,9 @@
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:shadowColor="#A80505"
+            android:shadowRadius="5"/>
 
     </RelativeLayout>
 

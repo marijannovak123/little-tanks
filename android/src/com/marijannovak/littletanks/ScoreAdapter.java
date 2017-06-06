@@ -69,9 +69,10 @@ public class ScoreAdapter extends BaseAdapter {
         this.notifyDataSetChanged();
     }
 
-    public void removeAt(int position)
+
+    public void clearItems()
     {
-        this.scoreList.remove(position);
+        this.scoreList.clear();
         this.notifyDataSetChanged();
     }
 

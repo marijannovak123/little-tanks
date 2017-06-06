@@ -21,7 +21,7 @@ class Enemy extends MovingUnit {
 
         for(int i = 0; i < bulletList.size(); i++)
         {
-            if(Intersector.overlapConvexPolygons(this.getBoundingPolygon(), bulletList.get(i).getBoundingPolygon()))
+            if(Intersector.overlapConvexPolygons(this.getCollisionBox(), bulletList.get(i).getCollisionBox()))
             {
                 check = i;
             }

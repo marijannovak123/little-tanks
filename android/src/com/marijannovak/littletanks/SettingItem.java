@@ -26,9 +26,18 @@ public class SettingItem {
         return settingName;
     }
 
+    public void setSettingName(String name)
+    {
+        this.settingName = name;
+    }
+
     public Boolean getChecked(){
 
         return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
     }
 
     public Boolean getHasCheck()

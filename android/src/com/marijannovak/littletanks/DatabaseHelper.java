@@ -91,10 +91,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return scoreList;
     }
 
-    public void deleteScoreItem(int id)
-    {
-        SQLiteDatabase writeableDatabase = this.getWritableDatabase();
-        writeableDatabase.delete(DatabaseScheme.SCORE_TABLE, DatabaseScheme.PLAYER_ID + " = ? ", new String[] {String.valueOf(id)});
+    public void clearScoreTable() {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM "+ DatabaseScheme.SCORE_TABLE);
+
     }
 
     public static class DatabaseScheme

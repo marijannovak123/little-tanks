@@ -19,6 +19,7 @@
     <string name="log_in">Log In</string>
     <string name="repeat_your_password">Repeat your password</string>
     <string name="enter_your_username">Enter your username</string>
+    <string name="settings_">SETTINGS</string>
 
 
 </resources>

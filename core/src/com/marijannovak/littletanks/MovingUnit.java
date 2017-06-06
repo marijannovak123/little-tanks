@@ -88,7 +88,7 @@ class MovingUnit {
         this.unitSpeed += speed;
     }
 
-    public Polygon getBoundingPolygon()
+    public Polygon getCollisionBox()
     {
         Polygon boundingPolygon = new Polygon();
 

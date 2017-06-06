@@ -1,5 +1,7 @@
 package com.marijannovak.littletanks;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,9 @@ public class SettingsAdapter extends BaseAdapter {
     ArrayList<SettingItem> settings;
 
     public SettingsAdapter(ArrayList<SettingItem> settingItems) {
+
         this.settings = settingItems;
+
     }
 
     @Override
@@ -36,11 +40,11 @@ public class SettingsAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
 
         if (settings.get(position).getHasCheck()) {
 
-            CheckViewHolder checkViewHolder;
+            final CheckViewHolder checkViewHolder;
 
             if (convertView == null) {
 
@@ -66,6 +70,17 @@ public class SettingsAdapter extends BaseAdapter {
                 checkViewHolder.checkBox.setChecked(checkItem.getChecked());
             }
 
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    checkViewHolder.checkBox.setChecked(!checkViewHolder.checkBox.isChecked());
+                    settings.get(position).setChecked(!settings.get(position).getChecked());
+
+                }
+            });
+
 
         } else if (!settings.get(position).getHasCheck()) {
 
@@ -89,10 +104,32 @@ public class SettingsAdapter extends BaseAdapter {
 
         }
 
+
         return convertView;
 
     }
 
+    public boolean getSoundStatus()
+    {
+       return settings.get(0).getChecked();
+    }
+
+    public boolean getSensorStatus()
+    {
+        return settings.get(1).getChecked();
+    }
+
+    public void updateDiff(int current) {
+
+        if(current == 1)
+            settings.get(2).setSettingName("Difficulty: Easy");
+        else if(current == 2)
+            settings.get(2).setSettingName("Difficulty: Medium");
+        else if(current == 3)
+            settings.get(2).setSettingName("Difficulty: Hard");
+
+        this.notifyDataSetChanged();
+    }
 
     private static class CheckViewHolder {
 
