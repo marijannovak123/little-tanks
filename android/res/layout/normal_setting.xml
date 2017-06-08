@@ -11,7 +11,6 @@
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="10dp"
         android:textSize="20sp"
-        android:shadowColor="#A80505"
-        android:shadowRadius="5"
+
         />
 </LinearLayout>

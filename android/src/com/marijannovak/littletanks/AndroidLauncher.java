@@ -1,6 +1,8 @@
 package com.marijannovak.littletanks;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,14 +12,13 @@ import com.marijannovak.littletanks.LittleTanks;
 
 public class AndroidLauncher extends AndroidApplication implements LittleTanks.GameOverCallback{
 
-
-
-
     private boolean soundCheck, sensorCheck;
     private int diff = 1;
     private String name;
 
 	LittleTanks game;
+
+	SharedPreferences sharedPreferences;
 
 
 	@Override
@@ -28,6 +29,8 @@ public class AndroidLauncher extends AndroidApplication implements LittleTanks.G
 		config.useImmersiveMode = true;
 		config.useAccelerometer = true;
 
+		sharedPreferences = getSharedPreferences(Constants.MyPREFERENCES, Context.MODE_PRIVATE);
+
 		Intent startingIntent = this.getIntent();
 
 		if(startingIntent.hasExtra(Constants.KEY_PLAYER))
@@ -35,24 +38,13 @@ public class AndroidLauncher extends AndroidApplication implements LittleTanks.G
 			name = startingIntent.getStringExtra(Constants.KEY_PLAYER);
 		}
 
-		if(startingIntent.hasExtra(Constants.Sound))
-        {
-            soundCheck = startingIntent.getBooleanExtra(Constants.Sound, false);
-        }
+            soundCheck = sharedPreferences.getBoolean(Constants.Sound, false);
+            sensorCheck = sharedPreferences.getBoolean(Constants.Sensors, false);
+            diff = sharedPreferences.getInt(Constants.Difficulty, 1);
 
-        if(startingIntent.hasExtra(Constants.Sensors))
-        {
-            sensorCheck = startingIntent.getBooleanExtra(Constants.Sensors, false);
-        }
-
-        if(startingIntent.hasExtra(Constants.Difficulty))
-        {
-            diff = startingIntent.getIntExtra(Constants.Difficulty, 1);
-        }
 
         if(name == null) name = "Unknown";
 
-		Log.d("Parametar log launcher", "name: " + name + " diff: "+ diff + " sound: " + soundCheck + " sensors: "+ sensorCheck);
 		game = new LittleTanks(name, diff, soundCheck, sensorCheck);
 
 		game.setGameOverCallback(this);

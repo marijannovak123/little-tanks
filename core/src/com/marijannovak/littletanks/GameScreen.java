@@ -19,7 +19,6 @@ import java.util.Random;
  * Created by marij on 27.3.2017..
  */
 
-//TODO ENEMY BULLET PLAYER COLLISION
 class GameScreen implements Screen {
 
     private final LittleTanks game;
@@ -262,7 +261,7 @@ class GameScreen implements Screen {
 
     private void speedUpEnemies() {
 
-        if(gameTime - lastSpeedUp > 15)
+        if(gameTime - lastSpeedUp > 30)
         {
             for(Enemy enemy : enemyList)
             {
@@ -299,8 +298,6 @@ class GameScreen implements Screen {
                 enemy.getSprite().setPosition(enemy.getPosition().x, camera.viewportHeight);
         }
     }
-
-
 
     private void spawnEnemies() {
 
@@ -351,15 +348,15 @@ class GameScreen implements Screen {
                         tank.fire(bulletList, new Bullet(new Texture("bullet.png")), camera.viewportHeight / 500);
                         if(game.sound) fireSound.play(0.5f);
                         lastFireTime = gameTime;
-                    } else {
-                        //TODO nope
+                    }
+
                     }
                 }
 
             }
 
         }
-    }
+
 
     private void sensorMove() {
 

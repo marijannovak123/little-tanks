@@ -10,16 +10,19 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.badlogic.gdx.utils.StringBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-//TODO SHARED PREFS ZA LOGIN I OSTALO..SPAJANJE SAMO
 public class MenuActivity extends Activity implements View.OnClickListener{
 
     private static final String TAG = "MainActivity Debug";
@@ -42,6 +45,10 @@ public class MenuActivity extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -104,13 +111,19 @@ public class MenuActivity extends Activity implements View.OnClickListener{
         {
             case R.id.playBtn:
 
-                Intent playIntent = new Intent(this, AndroidLauncher.class);
-                playIntent.putExtra(Constants.KEY_PLAYER, loginName);
-                playIntent.putExtra(Constants.Sound, soundCheck);
-                playIntent.putExtra(Constants.Sensors, sensorCheck);
-                playIntent.putExtra(Constants.Difficulty, diff);
-                startActivity(playIntent);
-                finish();
+                if(loginName != null)
+                {
+                    Intent playIntent = new Intent(MenuActivity.this, AndroidLauncher.class);
+                    playIntent.putExtra(Constants.KEY_PLAYER, loginName);
+                    playIntent.putExtra(Constants.Sound, soundCheck);
+                    playIntent.putExtra(Constants.Sensors, sensorCheck);
+                    playIntent.putExtra(Constants.Difficulty, diff);
+                    startActivity(playIntent);
+                    finish();
+                }
+
+                else enterNameDialog();
+
 
                 break;
 
@@ -134,6 +147,9 @@ public class MenuActivity extends Activity implements View.OnClickListener{
 
                 if(authStatus.getText().equals("Login/Register"))
                     registerLoginDialog();
+
+
+                else logOutDialog();
 
                 break;
 
@@ -163,6 +179,82 @@ public class MenuActivity extends Activity implements View.OnClickListener{
                         registerIntent.putExtra(Constants.KEY_RL, 1);
                         startActivity(registerIntent);
                         finish();
+                    }
+                })
+                .show();
+    }
+
+    private void logOutDialog()
+    {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle("Log Out")
+
+                .setMessage("Would you like to log out?")
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("Log out", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mAuth = FirebaseAuth.getInstance();
+
+                        if(mAuth.getCurrentUser() != null) {
+
+                            Toast.makeText(MenuActivity.this, mAuth.getCurrentUser().getEmail() + " signed out!", Toast.LENGTH_SHORT).show();
+                            mAuth.signOut();
+                            authStatus.setText("Login/Register");
+                            loginName = null;
+
+                        }
+                    }
+                })
+                .show();
+
+    }
+
+    private void enterNameDialog()
+    {
+        final EditText enterName = new EditText(this);
+        enterName.setGravity(Gravity.CENTER_HORIZONTAL);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle("Choose name")
+
+                .setMessage("Enter your name or log in to disable this dialog!")
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setView(enterName)
+                .setNeutralButton("Log In", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent registerIntent = new Intent(MenuActivity.this, RegisterActivity.class);
+                        registerIntent.putExtra(Constants.KEY_RL, 1);
+                        startActivity(registerIntent);
+                        finish();
+                    }
+                })
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if(enterName.getText().toString().isEmpty())
+
+                            enterName.setText("Unknown");
+
+                        Intent playIntent = new Intent(MenuActivity.this, AndroidLauncher.class);
+                        playIntent.putExtra(Constants.KEY_PLAYER, enterName.getText().toString());
+                        playIntent.putExtra(Constants.Sound, soundCheck);
+                        playIntent.putExtra(Constants.Sensors, sensorCheck);
+                        playIntent.putExtra(Constants.Difficulty, diff);
+                        startActivity(playIntent);
+                        finish();
+
                     }
                 })
                 .show();

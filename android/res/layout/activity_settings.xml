@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.marijannovak.littletanks.Settings">
+    tools:context="com.marijannovak.littletanks.Settings"
+    android:background="@drawable/settings_bg">
 
     <TextView
         android:id="@+id/tvSettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginTop="10dp"
         android:fontFamily="serif"
         android:text="@string/settings_"

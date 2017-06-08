@@ -35,7 +35,7 @@
         <activity android:name=".GameOver" />
         <activity android:name=".HighScores" />
         <activity android:name=".Settings" />
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity" android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
 
 </manifest>
