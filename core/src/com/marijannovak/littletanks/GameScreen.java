@@ -221,7 +221,7 @@ class GameScreen implements Screen {
             enemyList.clear();
 
             enemySpeed = 5 + 2*game.difficulty;
-            enemyShootSpeed = 0.4;
+            enemyShootSpeed = 0.4 + game.difficulty/5;
 
             spawnEnemies();
 
