@@ -225,7 +225,9 @@ class GameScreen implements Screen {
 
             spawnEnemies();
 
-            if(lifeSprites.size() >= 1) lifeSprites.remove(lifeSprites.size() - 1);
+            if(lifeSprites.size() >= 1)
+
+                lifeSprites.remove(lifeSprites.size() - 1);
 
             if(game.sound) tankDead.play();
             Gdx.input.vibrate(200);
@@ -495,11 +497,15 @@ class GameScreen implements Screen {
     @Override
     public void hide() {
 
+
     }
 
     @Override
     public void dispose() {
-        //TODO DISPOSE
+
+
+        playerTexture.dispose();
+
     }
 
     @Override

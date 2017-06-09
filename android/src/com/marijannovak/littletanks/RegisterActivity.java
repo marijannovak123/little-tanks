@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.badlogic.gdx.utils.StringBuilder;
@@ -46,6 +47,9 @@ public class RegisterActivity extends AppCompatActivity {
     private DatabaseReference dbRef;
     private GoogleApiClient mGoogleApiClient;
 
+    ProgressBar spinnerProgress;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,11 @@ public class RegisterActivity extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        this.spinnerProgress = (ProgressBar) findViewById(R.id.spinProgress2);
+
+        spinnerProgress.setVisibility(View.GONE);
 
         setUpFirebase();
 
@@ -116,6 +125,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void googleSignIn() {
+
+        spinnerProgress.setVisibility(View.VISIBLE);
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -164,11 +175,14 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
+                            spinnerProgress.setVisibility(View.GONE);
                             Toast.makeText(RegisterActivity.this, "Google sign in success!", Toast.LENGTH_SHORT).show();
 
 
                         } else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            spinnerProgress.setVisibility(View.GONE);
+
                             Toast.makeText(RegisterActivity.this, "Authentication failed!",
                                     Toast.LENGTH_SHORT).show();
                         }

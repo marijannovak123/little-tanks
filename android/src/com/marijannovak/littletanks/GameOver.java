@@ -24,13 +24,11 @@ public class GameOver extends Activity implements View.OnClickListener {
     private String playerName;
     private int score, time, killed;
 
-    private TextView tvScore;
     private Button btnPlayAgain, btnMain;
 
     private FirebaseDatabase fbDatabase;
     private DatabaseReference dbRef;
 
-    private boolean existsCheck = false;
     private Integer playerScore;
 
 
@@ -44,7 +42,6 @@ public class GameOver extends Activity implements View.OnClickListener {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
-        tvScore = (TextView) findViewById(R.id.tvScore);
         btnPlayAgain = (Button) findViewById(R.id.btnAgain);
         btnMain = (Button) findViewById(R.id.btnMain);
 
@@ -88,9 +85,7 @@ public class GameOver extends Activity implements View.OnClickListener {
 
                     if (playerScore != null && playerScore < score)
                     {
-                        dbRef.child(playerName).child("score").setValue(score);
-                        dbRef.child(playerName).child("killed").setValue(killed);
-                        dbRef.child(playerName).child("time").setValue(time);
+                        updateOnlineEntry(playerName, score, killed, time);
 
                         Toast.makeText(GameOver.this, "New high score! Saving to online database!", Toast.LENGTH_SHORT).show();
                     }
@@ -104,6 +99,27 @@ public class GameOver extends Activity implements View.OnClickListener {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
+
+    }
+
+    private void updateOnlineEntry(String playerName, int score, int killed, int time) {
+
+        dbRef.child(playerName).child("score").setValue(score);
+        dbRef.child(playerName).child("killed").setValue(killed);
+        dbRef.child(playerName).child("time").setValue(time);
+
+    }
+
+    private void createOnlineDatabaseEntry(String name) {
+
+        dbRef.child(name).setValue(0);
+        dbRef.child(name).child("username").setValue(name);
+        dbRef.child(name).child("score").setValue(score);
+        dbRef.child(name).child("killed").setValue(killed);
+        dbRef.child(name).child("time").setValue(time);
+
+        Toast.makeText(GameOver.this, "New high score! Saving to online database!", Toast.LENGTH_SHORT).show();
 
 
     }
@@ -132,18 +148,7 @@ public class GameOver extends Activity implements View.OnClickListener {
         }
     }
 
-    private void createOnlineDatabaseEntry(String name) {
 
-        dbRef.child(name).setValue(0);
-        dbRef.child(name).child("username").setValue(name);
-        dbRef.child(name).child("score").setValue(score);
-        dbRef.child(name).child("killed").setValue(killed);
-        dbRef.child(name).child("time").setValue(time);
-
-        Toast.makeText(GameOver.this, "New high score! Saving to online database!", Toast.LENGTH_SHORT).show();
-
-
-    }
 
     @Override
     public void onBackPressed() {

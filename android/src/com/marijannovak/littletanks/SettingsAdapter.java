@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class SettingsAdapter extends BaseAdapter {
 
-    ArrayList<SettingItem> settings;
+    private ArrayList<SettingItem> settings;
 
     public SettingsAdapter(ArrayList<SettingItem> settingItems) {
 

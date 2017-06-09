@@ -27,7 +27,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
 
     private static final String TAG = "MainActivity Debug";
 
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
 
     private String loginName;
     private boolean soundCheck, sensorCheck;

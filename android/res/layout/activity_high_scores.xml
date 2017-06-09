@@ -14,7 +14,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:fontFamily="serif"
-        android:text="@string/high_scores"
+        android:text="@string/local_highscores"
         android:textAlignment="center"
         android:textSize="40sp"
         android:textStyle="bold"
@@ -27,6 +27,7 @@
         android:layout_height="match_parent"
         android:id="@+id/lvLocalScores"
         android:layout_below="@id/tvHighScores"/>
+
 
     <ListView
         android:layout_width="match_parent"

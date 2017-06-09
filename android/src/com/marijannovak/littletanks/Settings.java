@@ -28,14 +28,13 @@ public class Settings extends Activity {
 
     private int diff;
 
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
 
-    //TODO BACKGOURND
-    ListView lvSettings;
-    ArrayList<SettingItem> settingItems;
-    SettingsAdapter settingsAdapter;
+    private ListView lvSettings;
+    private ArrayList<SettingItem> settingItems;
+    private SettingsAdapter settingsAdapter;
 
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

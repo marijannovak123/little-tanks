@@ -16,9 +16,9 @@ public class AndroidLauncher extends AndroidApplication implements LittleTanks.G
     private int diff = 1;
     private String name;
 
-	LittleTanks game;
+	private LittleTanks game;
 
-	SharedPreferences sharedPreferences;
+	private SharedPreferences sharedPreferences;
 
 
 	@Override
