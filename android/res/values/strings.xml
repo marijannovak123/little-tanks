@@ -21,6 +21,11 @@
     <string name="enter_your_username">Enter your username</string>
     <string name="settings_">SETTINGS</string>
     <string name="local_highscores">LOCAL HIGHSCORES</string>
+    <string name="title_activity_tab_scores">TabScores</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_scores">ScoresActivity</string>
+    <string name="online_highscores">ONLINE HIGHSCORES</string>
 
 
 </resources>

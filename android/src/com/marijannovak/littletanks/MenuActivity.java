@@ -129,7 +129,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
 
             case R.id.scoresBtn:
 
-                Intent scoreIntent = new Intent(this, HighScores.class);
+                Intent scoreIntent = new Intent(this, ScoresActivity.class);
                 startActivity(scoreIntent);
                 finish();
 

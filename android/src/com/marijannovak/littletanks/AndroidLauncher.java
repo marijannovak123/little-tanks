@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.marijannovak.littletanks.LittleTanks;
 
 public class AndroidLauncher extends AndroidApplication implements LittleTanks.GameOverCallback{
 

@@ -16,7 +16,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/tank"
         android:label="@string/app_name"
         android:screenOrientation="landscape"
         android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen">
@@ -33,9 +33,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameOver" />
-        <activity android:name=".HighScores" />
         <activity android:name=".Settings" />
-        <activity android:name=".RegisterActivity" android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".ScoresActivity"
+            android:label="@string/title_activity_scores"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
 
 </manifest>

@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.badlogic.gdx.utils.StringBuilder;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -27,8 +26,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -43,13 +40,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseDatabase fbDatabase;
-    private DatabaseReference dbRef;
     private GoogleApiClient mGoogleApiClient;
 
     ProgressBar spinnerProgress;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,9 +112,6 @@ public class RegisterActivity extends AppCompatActivity {
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
-        fbDatabase = FirebaseDatabase.getInstance();
-        dbRef = fbDatabase.getReference();
     }
 
     private void googleSignIn() {

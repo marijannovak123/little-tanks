@@ -199,6 +199,7 @@ class GameScreen implements Screen {
 
         if((gameTime - enemyLastFireTime) > 1/enemyShootSpeed && enemyBulletList.size() < 5 && enemyList.size() == 4)
         {
+
             enemyList.get(rand.nextInt(4)).fire(enemyBulletList, new Bullet(new Texture("bullet_enemy.png")), camera.viewportHeight / 500);
 
             if(game.sound) enemyFireSound.play(0.5f);
@@ -331,66 +332,70 @@ class GameScreen implements Screen {
 
         screenWrapTank();
 
-        if(game.sensor) sensorMove();
+        if (game.sensor) sensorMove();
 
-        for(int i = 0; i < 2; i ++) {
+        for (int i = 0; i < 2; i++) {
 
             if (Gdx.input.isTouched(i)) {
 
                 Vector3 touch = new Vector3(Gdx.input.getX(i), Gdx.input.getY(i), 0);
                 camera.unproject(touch);
 
-                if (controller.getJoystickSprite().getBoundingRectangle().contains(touch.x, touch.y)) {
+                if (controller.getJoystickSprite().getBoundingRectangle().contains(touch.x, touch.y))
+                {
                     tank.move(controller.getJoystickAngle(touch));
                 }
 
                 if (controller.getFireSprite().getBoundingRectangle().contains(touch.x, touch.y)) {
 
-                    if (gameTime - lastFireTime > 0.5 && bulletList.size() < 5) {
+                    if (gameTime - lastFireTime > 0.5 && bulletList.size() < 5)
+                    {
                         tank.fire(bulletList, new Bullet(new Texture("bullet.png")), camera.viewportHeight / 500);
-                        if(game.sound) fireSound.play(0.5f);
+
+                        if (game.sound) fireSound.play(0.5f);
+
                         lastFireTime = gameTime;
                     }
 
-                    }
+
                 }
 
             }
 
         }
-
+    }
 
     private void sensorMove() {
 
-     if(Gdx.input.isTouched()) {
+         if(Gdx.input.isTouched())
+         {
 
-                Vector3 touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-                camera.unproject(touch);
+                    Vector3 touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+                    camera.unproject(touch);
 
-                if(!controller.getJoystickSprite().getBoundingRectangle().contains(touch.x, touch.y))
-                {
+                    if(!controller.getJoystickSprite().getBoundingRectangle().contains(touch.x, touch.y))
+                    {
+                        if(Gdx.input.getAccelerometerX() > 0)
+
+                            tank.moveSensor(Gdx.input.getAccelerometerY() , -Gdx.input.getAccelerometerX() + 5);
+
+                        else if(Gdx.input.getAccelerometerX() < 0)
+
+                            tank.moveSensor(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX());
+                    }
+         }
+
+         else
+         {
                     if(Gdx.input.getAccelerometerX() > 0)
 
-                        tank.moveSensor(Gdx.input.getAccelerometerY() , -Gdx.input.getAccelerometerX() + 5);
+                    tank.moveSensor(Gdx.input.getAccelerometerY() , -Gdx.input.getAccelerometerX() + 5);
 
                     else if(Gdx.input.getAccelerometerX() < 0)
 
-                        tank.moveSensor(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX());
-                }
-            }
-
-            else
-            {
-                if(Gdx.input.getAccelerometerX() > 0)
-
-                tank.moveSensor(Gdx.input.getAccelerometerY() , -Gdx.input.getAccelerometerX() + 5);
-
-                else if(Gdx.input.getAccelerometerX() < 0)
-
-                tank.moveSensor(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX() + 8);
-            }
-
-        }
+                    tank.moveSensor(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX() + 8);
+         }
+    }
 
     private void moveBullets() {
 

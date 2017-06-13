@@ -39,7 +39,7 @@ class LittleTanks extends Game {
 
 	public interface GameOverCallback{
 
-		public void gameOver(String player, int score, int time, int killed);
+		void gameOver(String player, int score, int time, int killed);
 	}
 
 	public void setGameOverCallback(GameOverCallback callback)
