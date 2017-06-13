@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +30,7 @@ public class OnlineScoreFragment extends Fragment {
 
     private FirebaseDatabase fbDatabase;
     private DatabaseReference dbRef;
+    private FirebaseAuth mAuth;
 
     private ProgressBar spinnerProgress;
 
@@ -39,7 +41,10 @@ public class OnlineScoreFragment extends Fragment {
 
         fbDatabase = FirebaseDatabase.getInstance();
         dbRef = fbDatabase.getReference("");
-
+        mAuth = FirebaseAuth.getInstance();
+        
+        if(mAuth.getCurrentUser() == null)
+            Toast.makeText(getActivity(), "Log in to see online scores!", Toast.LENGTH_SHORT).show();
 
             this.lvOnline = (ListView) view.findViewById(R.id.lvOnlineScores);
             this.spinnerProgress = (ProgressBar) view.findViewById(R.id.spinProgress);

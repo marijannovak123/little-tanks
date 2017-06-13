@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +22,7 @@ public class GameOver extends Activity implements View.OnClickListener {
     private int score, time, killed;
 
     private Button btnPlayAgain, btnMain;
+    private TextView tvScored;
 
     private FirebaseDatabase fbDatabase;
     private DatabaseReference dbRef;
@@ -38,6 +40,7 @@ public class GameOver extends Activity implements View.OnClickListener {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
+        tvScored = (TextView) findViewById(R.id.tvScored);
         btnPlayAgain = (Button) findViewById(R.id.btnAgain);
         btnMain = (Button) findViewById(R.id.btnMain);
 
@@ -65,6 +68,8 @@ public class GameOver extends Activity implements View.OnClickListener {
         {
             killed = startingIntent.getIntExtra(Constants.KEY_KILLED, 0);
         }
+
+        tvScored.setText("You scored " + score + " points by killing " + killed + " enemies!");
 
         DatabaseHelper.getInstance(this).addScore(new ScoreItem(playerName, score, time, killed));
 

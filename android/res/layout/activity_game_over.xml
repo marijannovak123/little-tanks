@@ -13,11 +13,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvScore"
-
+            android:id="@+id/tvScored"
+            android:fontFamily="serif"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:shadowColor="#A80505"
+            android:shadowRadius="5"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="59dp" />
+            android:layout_marginTop="50dp" />
 
 
         <Button
@@ -45,5 +50,7 @@
             android:layout_above="@+id/btnAgain"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"/>
+
+
 
 </RelativeLayout>
