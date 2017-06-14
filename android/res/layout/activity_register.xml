@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.marijannovak.littletanks.RegisterActivity"
-    android:background="@drawable/register_bg">
+    android:background="#0000FF"
+    >
 
     <LinearLayout
         android:layout_width="wrap_content"
