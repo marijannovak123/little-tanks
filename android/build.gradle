@@ -20,7 +20,7 @@ android {
     defaultConfig {
         applicationId "com.marijannovak.littletanks"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 22
     }
 }
 

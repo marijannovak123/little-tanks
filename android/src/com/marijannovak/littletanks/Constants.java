@@ -18,5 +18,5 @@ public class Constants
     public static final String Sensors = "sensorKey";
     public static final String Difficulty = "diffKey";
 
-    public static final String LoggedKey = "logged_key";
+    public static final int permissionCode = 0;
 }

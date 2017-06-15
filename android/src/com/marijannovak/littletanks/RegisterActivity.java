@@ -1,9 +1,14 @@
 package com.marijannovak.littletanks;
 
+import android.*;
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -73,6 +78,8 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     }
+
+
 
     private void referenceViews() {
         etEmail = (EditText) findViewById(R.id.etEmail);
@@ -270,7 +277,9 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         mAuth.addAuthStateListener(mAuthListener);
+
     }
 
     @Override
@@ -280,6 +289,7 @@ public class RegisterActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

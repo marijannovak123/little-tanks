@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.marijannovak.littletanks.RegisterActivity"
-    android:background="#0000FF"
+    android:background="#9999"
     >
 
     <LinearLayout
