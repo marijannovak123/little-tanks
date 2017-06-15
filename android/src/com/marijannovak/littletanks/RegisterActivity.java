@@ -34,7 +34,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private static final String TAG = "RegisterActivity Debug";
+    private static final String TAG = "RegisterActivity";
     private static final int RC_SIGN_IN = 1;
 
     private int rlStatus;
