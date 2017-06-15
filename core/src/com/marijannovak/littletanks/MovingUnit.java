@@ -10,9 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
-/**
- * Created by marij on 27.3.2017..
- */
+
 
 class MovingUnit {
 
